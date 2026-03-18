@@ -1,10 +1,10 @@
-function renderLogin(navigateTo, loginUser, signupUser, showToast) {
+function renderLogin(navigateTo, loginUser, signupUser, showToast, initialData = {}) {
     const container = document.createElement('div');
     container.className = 'container flex items-center justify-center';
     container.style.minHeight = '100vh';
 
     // State to track current mode
-    let isLoginMode = true;
+    let isLoginMode = initialData.mode === 'signup' ? false : true;
 
     function updateUI() {
         const title = container.querySelector('#authTitle');
@@ -15,6 +15,12 @@ function renderLogin(navigateTo, loginUser, signupUser, showToast) {
         const toggleText = container.querySelector('#toggleText');
         const toggleLink = container.querySelector('#toggleLink');
         const nameInput = container.querySelector('input[name="fullName"]');
+
+        // Pre-fill code if provided and in signup mode
+        const codeInput = container.querySelector('input[name="redemptionCode"]');
+        if (!isLoginMode && initialData.code && codeInput) {
+            codeInput.value = initialData.code;
+        }
 
         if (isLoginMode) {
             title.textContent = 'Welcome Back';
@@ -117,6 +123,9 @@ function renderLogin(navigateTo, loginUser, signupUser, showToast) {
 
     // Initialize toggles
     initPasswordToggles();
+
+    // Set initial UI state
+    updateUI();
 
     toggleLink.addEventListener('click', (e) => {
         e.preventDefault();

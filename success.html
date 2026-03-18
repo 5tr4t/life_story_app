@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Successful | FondMemoirs</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <!-- Landing Page CSS (reusing variables) -->
+    <link rel="stylesheet" href="css/landing.css">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        .success-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--color-bg);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .success-card {
+            background: white;
+            padding: 4rem;
+            border-radius: 20px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.05);
+            max-width: 600px;
+            width: 100%;
+            animation: fadeInScale 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background-color: #E0F2E6;
+            color: #3BB36A;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2.5rem auto;
+        }
+
+        .success-icon i {
+            width: 40px;
+            height: 40px;
+        }
+
+        .access-code-box {
+            background-color: var(--color-surface);
+            border: 2px dashed var(--color-accent);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2.5rem 0;
+            position: relative;
+        }
+
+        .access-code-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .access-code-value {
+            font-family: var(--font-sans);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-text-main);
+            letter-spacing: 0.05em;
+        }
+
+        .success-instructions {
+            color: var(--color-text-muted);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 3rem;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .success-card {
+                padding: 3rem 1.5rem;
+            }
+
+            .access-code-value {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="success-page">
+        <div class="success-card">
+            <div class="success-icon">
+                <i data-feather="check"></i>
+            </div>
+            <h1 class="section-title">The Journey Begins.</h1>
+            <p class="success-instructions">
+                Thank you for your purchase. We've sent a confirmation email to you, but you can get started right now
+                using the code below.
+            </p>
+
+            <div class="access-code-box">
+                <div class="access-code-label">Your Unique Access Code</div>
+                <div id="access-code" class="access-code-value">LOADING...</div>
+            </div>
+
+            <div class="cta-group">
+                <a id="start-link" href="app.html" class="btn btn-primary btn-large btn-block">Begin Your Memoir</a>
+                <p class="mt-3" style="font-size: 0.9rem; opacity: 0.7;">
+                    Keep this code safe. You'll need it to access your portal.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        feather.replace();
+
+        // Get the access code from the URL (Netlify/Stripe will redirect here with ?code=...)
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code') || 'NOT-FOUND';
+
+        const codeDisplay = document.getElementById('access-code');
+        const startLink = document.getElementById('start-link');
+
+        if (code !== 'NOT-FOUND') {
+            codeDisplay.textContent = code;
+            startLink.href = `app.html?code=${code}`;
+        } else {
+            codeDisplay.textContent = "---- ---- ----";
+            codeDisplay.style.opacity = "0.3";
+        }
+    </script>
+</body>
+
+</html>

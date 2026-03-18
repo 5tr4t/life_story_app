@@ -16,8 +16,21 @@ const defaultState = {
     current_stage: '1',
     clarificationSubmissionTimes: {}, // Map of chapterNum -> timestamp
     writingStyleSet: false,
-    pendingDraftFeedback: null // { chapterNumber, feedback }
+    pendingDraftFeedback: null, // { chapterNumber, feedback }
+    initialAuthData: {} // { mode, code }
 };
+
+// Parse URL parameters for redemption code
+const urlParams = new URLSearchParams(window.location.search);
+const urlCode = urlParams.get('code');
+if (urlCode) {
+    state.initialAuthData = {
+        mode: 'signup',
+        code: urlCode
+    };
+    // Clear the URL parameter so it doesn't persist on refresh
+    window.history.replaceState({}, document.title, window.location.pathname);
+}
 
 // Load from localStorage
 const savedState = localStorage.getItem('lifeStoryState');
@@ -151,7 +164,7 @@ function render() {
 
     switch (state.currentView) {
         case 'login':
-            app.appendChild(renderLogin(navigateTo, loginUser, signupUser, showToast));
+            app.appendChild(renderLogin(navigateTo, loginUser, signupUser, showToast, state.initialAuthData));
             break;
         case 'project-selector':
             app.appendChild(renderProjectSelector(navigateTo, state, selectProject));

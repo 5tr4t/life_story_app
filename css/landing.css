@@ -902,7 +902,6 @@ section {
 @media (max-width: 768px) {
     .nav-links {
         display: none;
-        /* simple mobile nav override for now */
     }
 
     .footer-container {
@@ -926,6 +925,5 @@ section {
         width: 80%;
         max-width: 300px;
         transform: rotate(0) !important;
-        /* disable rotation on mobile to save space */
     }
 }
