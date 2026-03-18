@@ -20,6 +20,10 @@ const defaultState = {
     initialAuthData: {} // { mode, code }
 };
 
+// Load from localStorage
+const savedState = localStorage.getItem('lifeStoryState');
+const state = savedState ? { ...defaultState, ...JSON.parse(savedState) } : defaultState;
+
 // Parse URL parameters for redemption code
 const urlParams = new URLSearchParams(window.location.search);
 const urlCode = urlParams.get('code');
@@ -31,10 +35,6 @@ if (urlCode) {
     // Clear the URL parameter so it doesn't persist on refresh
     window.history.replaceState({}, document.title, window.location.pathname);
 }
-
-// Load from localStorage
-const savedState = localStorage.getItem('lifeStoryState');
-const state = savedState ? { ...defaultState, ...JSON.parse(savedState) } : defaultState;
 
 // Don't restore currentView from localStorage - always start fresh
 // If user is logged in, go to dashboard; otherwise login
