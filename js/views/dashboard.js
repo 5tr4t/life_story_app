@@ -103,7 +103,7 @@ function renderDashboard(navigateTo, state) {
 
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
                 <!-- Step 1: Setup -->
-                <div class="card" style="${setupBorder}">
+                <div class="card" style="display: flex; flex-direction: column; ${setupBorder}">
                     <div class="flex justify-between items-center" style="margin-bottom: 1rem;">
                         <h3 style="font-size: 1.25rem;">1. Initial Setup</h3>
                         ${getBadge(setupStatus)}
@@ -111,11 +111,11 @@ function renderDashboard(navigateTo, state) {
                     <p style="color: var(--color-text-muted); margin-bottom: 1.5rem;">
                         Profile and story preferences.
                     </p>
-                    <button id="setupBtn" class="btn ${setupBtnClass}" style="width: 100%;">View Setup</button>
+                    <button id="setupBtn" class="btn ${setupBtnClass}" style="width: 100%; margin-top: auto;">View Setup</button>
                 </div>
 
                 <!-- Step 2: Story Outline -->
-                <div class="card" style="${outlineBorder}">
+                <div class="card" style="display: flex; flex-direction: column; ${outlineBorder}">
                     <div class="flex justify-between items-center" style="margin-bottom: 1rem;">
                         <h3 style="font-size: 1.25rem;">2. Story Outline</h3>
                         ${getBadge(outlineStatus, stageNum < 2)}
@@ -123,11 +123,11 @@ function renderDashboard(navigateTo, state) {
                     <p style="color: var(--color-text-muted); margin-bottom: 1.5rem;">
                         Organize chapters and invite contributors.
                     </p>
-                    <button id="planBtn" class="btn ${outlineBtnClass}" style="width: 100%;" ${outlineDisabled}>${outlineBtnText}</button>
+                    <button id="planBtn" class="btn ${outlineBtnClass}" style="width: 100%; margin-top: auto;" ${outlineDisabled}>${outlineBtnText}</button>
                 </div>
 
                 <!-- Step 3: Conduct Interviews -->
-                <div class="card" style="${interviewBorder}">
+                <div class="card" style="display: flex; flex-direction: column; ${interviewBorder}">
                     <div class="flex justify-between items-center" style="margin-bottom: 1rem;">
                         <h3 style="font-size: 1.25rem;">3. Conduct Interviews</h3>
                         ${getBadge(interviewStatus, stageNum < 3)}
@@ -135,11 +135,11 @@ function renderDashboard(navigateTo, state) {
                     <p style="color: var(--color-text-muted); margin-bottom: 1.5rem;">
                         Record your stories (or interview others).
                     </p>
-                    <button id="startInterviewsBtn" class="btn ${interviewBtnClass}" style="width: 100%;" ${interviewDisabled}>Start Session</button>
+                    <button id="startInterviewsBtn" class="btn ${interviewBtnClass}" style="width: 100%; margin-top: auto;" ${interviewDisabled}>Start Session</button>
                 </div>
 
                 <!-- Step 4: Review Draft -->
-                <div class="card" style="${reviewBorder}">
+                <div class="card" style="display: flex; flex-direction: column; ${reviewBorder}">
                     <div class="flex justify-between items-center" style="margin-bottom: 1rem;">
                         <h3 style="font-size: 1.25rem;">4. Review Draft</h3>
                         ${getBadge(reviewStatus, stageNum < 4 && !draftsCompleted)}
@@ -147,7 +147,7 @@ function renderDashboard(navigateTo, state) {
                     <p style="color: var(--color-text-muted); margin-bottom: 1.5rem;">
                         Read and edit your generated story.
                     </p>
-                    <button id="reviewBtn" class="btn ${reviewBtnClass}" style="width: 100%;" ${reviewDisabled}>View Draft</button>
+                    <button id="reviewBtn" class="btn ${reviewBtnClass}" style="width: 100%; margin-top: auto;" ${reviewDisabled}>View Draft</button>
                 </div>
             </div>
         </main>
