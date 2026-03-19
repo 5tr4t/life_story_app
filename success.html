@@ -114,20 +114,21 @@
             <div class="success-icon">
                 <i data-feather="check"></i>
             </div>
-            <h1 class="section-title">The Journey Begins.</h1>
-            <p class="success-instructions">
+            <h1 id="success-title" class="section-title">The Journey Begins.</h1>
+            <p id="success-message" class="success-instructions">
                 Thank you for your purchase. We've sent a confirmation email to you, but you can get started right now
                 using the code below.
             </p>
 
             <div class="access-code-box">
-                <div class="access-code-label">Your Unique Access Code</div>
+                <div id="code-label" class="access-code-label">Your Unique Access Code</div>
                 <div id="access-code" class="access-code-value">LOADING...</div>
             </div>
 
             <div class="cta-group">
-                <a id="start-link" href="app.html" class="btn btn-primary btn-large btn-block">Begin Your Memoir</a>
-                <p class="mt-3" style="font-size: 0.9rem; opacity: 0.7;">
+                <a id="start-link" href="#" class="btn btn-primary btn-large btn-block" style="display: none;">Begin
+                    Your Memoir</a>
+                <p id="code-safe-msg" class="mt-3" style="font-size: 0.9rem; opacity: 0.7; display: none;">
                     Keep this code safe. You'll need it to access your portal.
                 </p>
             </div>
@@ -137,20 +138,63 @@
     <script>
         feather.replace();
 
-        // Get the access code from the URL (Netlify/Stripe will redirect here with ?code=...)
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code') || 'NOT-FOUND';
+        const n8nWebhookUrl = 'https://primary-production-adbb0.up.railway.app/webhook/b99f2c01-3c0c-4e28-a34a-ac46bb12516e';
 
-        const codeDisplay = document.getElementById('access-code');
-        const startLink = document.getElementById('start-link');
+        async function fetchAccessCode() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const sessionId = urlParams.get('session_id');
 
-        if (code !== 'NOT-FOUND') {
-            codeDisplay.textContent = code;
-            startLink.href = `app.html?code=${code}`;
-        } else {
-            codeDisplay.textContent = "---- ---- ----";
-            codeDisplay.style.opacity = "0.3";
+            const titleEl = document.getElementById('success-title');
+            const messageEl = document.getElementById('success-message');
+            const codeEl = document.getElementById('access-code');
+            const labelEl = document.getElementById('code-label');
+            const startLink = document.getElementById('start-link');
+            const safeMsg = document.getElementById('code-safe-msg');
+
+            if (!sessionId) {
+                codeEl.textContent = "Session ID Missing";
+                codeEl.style.fontSize = "1.2rem";
+                return;
+            }
+
+            try {
+                const response = await fetch(n8nWebhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ stripe_session_id: sessionId })
+                });
+
+                if (!response.ok) throw new Error('Failed to fetch code');
+
+                const data = await response.json();
+                const { code, is_gift } = data;
+
+                if (code) {
+                    codeEl.textContent = code;
+                    startLink.href = `app.html?code=${code}`;
+                    startLink.style.display = 'inline-block';
+                    safeMsg.style.display = 'block';
+
+                    if (is_gift === true || is_gift === "true") {
+                        titleEl.textContent = "A Gift of Memories.";
+                        messageEl.textContent = "You've purchased a beautiful gift. Please share the code below with your recipient so they can begin their journey.";
+                        labelEl.textContent = "Gift Access Code";
+                        startLink.textContent = "Begin Their Memoir";
+                    }
+                } else {
+                    codeEl.textContent = "Generating...";
+                    // Retry in 3 seconds if n8n hasn't finished yet
+                    setTimeout(fetchAccessCode, 3000);
+                }
+            } catch (err) {
+                console.error(err);
+                codeEl.textContent = "Error Loading Code";
+                codeEl.style.fontSize = "1.2rem";
+                messageEl.textContent = "We encountered an issue fetching your code. Please check your email for the confirmation.";
+            }
         }
+
+        fetchAccessCode();
     </script>
 </body>
 
