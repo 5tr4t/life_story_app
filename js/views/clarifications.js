@@ -67,7 +67,7 @@ function renderClarifications(navigateTo, state) {
                 </div>
                 
                 <p style="text-align: center; color: var(--color-text-muted); font-size: 0.875rem; margin-top: 2rem;">
-                    Your answers help us create a more accurate and polished version of your life story.
+                    Your answers help us create a more accurate and polished version of your FondMemoirs.
                 </p>
             </main>
         `;

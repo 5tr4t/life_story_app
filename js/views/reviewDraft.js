@@ -116,7 +116,7 @@ function renderReviewDraft(navigateTo, state) {
                     ${isFullyComplete ? `
                     <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: #dcfce7; border-radius: 1rem; border: 1px solid #166534;">
                         <h3 style="color: #166534; margin-bottom: 0.5rem;">Memoir Complete</h3>
-                        <p style="color: #166534;">Your life story is officially preserved! You can still read your chapters above.</p>
+                        <p style="color: #166534;">Your FondMemoirs book is officially preserved! You can still read your chapters above.</p>
                     </div>
                     ` : ''}
                 </main>

@@ -33,7 +33,7 @@ function renderLogin(navigateTo, loginUser, signupUser, showToast, initialData =
             toggleLink.textContent = 'Start your journey';
         } else {
             title.textContent = 'Create Account';
-            subtitle.textContent = 'Start your life story journey today';
+            subtitle.textContent = 'Start your FondMemoirs journey today';
             nameGroup.style.display = 'block';
             signupExtras.style.display = 'block';
             nameInput.setAttribute('required', 'true');

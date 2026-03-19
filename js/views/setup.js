@@ -24,7 +24,7 @@ function renderSetup(navigateTo, state) {
                 <div style="margin-bottom: 2rem;">
                     <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Let's Get Started</h1>
                     <p style="color: var(--color-text-muted);">
-                        Please provide some basic details to help us tailor your Life Story journey.
+                        Please provide some basic details to help us tailor your FondMemoirs journey.
                     </p>
                     <div id="setupError" style="display: none; background: #fee2e2; color: #991b1b; padding: 1rem; border-radius: 0.5rem; margin-top: 1rem; border: 1px solid #fecaca;"></div>
                     ${state.journeyProgress && state.journeyProgress.questions ? `

@@ -1,6 +1,6 @@
 console.log('%c API Service v3 Loaded - Feedback Webhook Active ', 'background: #222; color: #bada55');
 /**
- * API Service for Life Story App
+ * API Service for FondMemoirs App
  * Handles communication with n8n backend
  */
 
@@ -20,6 +20,7 @@ const API_CONFIG = {
     DRAFT_FEEDBACK_WEBHOOK: 'https://primary-production-adbb0.up.railway.app/webhook/eb9266f4-3ff1-4c93-9532-302201efb935',
     MEMOIRS_WEBHOOK: '',
     REGISTER_WEBHOOK: 'https://primary-production-adbb0.up.railway.app/webhook/46d8e10a-ad06-4990-8a50-dbeeb57f1181',
+    ADD_MEMOIR_WEBHOOK: 'https://primary-production-adbb0.up.railway.app/webhook/c1bbceed-1b43-4fdb-9723-7829d40cb936',
     STYLE_PERSONA_WEBHOOK: 'https://primary-production-adbb0.up.railway.app/webhook/1019140e-e429-4f1e-ba6f-bd0ba1f9eba6',
 
 
@@ -379,6 +380,32 @@ const ApiService = {
             return await response.json();
         } catch (error) {
             console.error('Registration error:', error);
+            throw error;
+        }
+    },
+
+    /**
+     * Authenticated call for existing users to add a new memoir to their account
+     */
+    async redeemAdditionalCode(code, memoirName) {
+        try {
+            console.log(`Adding new memoir with code: ${code}`);
+            const response = await this._secureFetch(API_CONFIG.ADD_MEMOIR_WEBHOOK, {
+                method: 'POST',
+                body: JSON.stringify({
+                    redemptionCode: code,
+                    memoirName: memoirName
+                })
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Failed to add memoir: ${errorText}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Add memoir error:', error);
             throw error;
         }
     },

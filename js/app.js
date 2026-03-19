@@ -1,5 +1,5 @@
 /**
- * Life Story Application - Main Logic
+ * FondMemoirs Application - Main Logic
  */
 
 // State Management
@@ -72,6 +72,7 @@ async function initSession() {
                 if (memoirs.length === 1) {
                     await selectProject(memoirs[0]);
                 } else {
+                    // Force project selection if multiple memoirs exist
                     state.availableMemoirs = memoirs;
                     navigateTo('project-selector');
                 }
@@ -249,7 +250,7 @@ async function loginUser(email, password, onComplete) {
             // Auto-login to the only project
             await selectProject(memoirs[0]);
         } else {
-            // Show selection screen
+            // Force selection screen for multiple memoirs
             state.availableMemoirs = memoirs;
             navigateTo('project-selector');
         }
@@ -309,20 +310,21 @@ async function redeemNewCode(code, memoirName) {
     try {
         console.log(`Redeeming new code for existing user: ${state.user.email}`);
 
-        const result = await ApiService.registerWithCode({
-            email: state.user.email,
-            redemptionCode: code,
-            memoirName,
-            isExistingUser: true // Pass flag so backend doesn't try to create account
-        });
+        const result = await ApiService.redeemAdditionalCode(code, memoirName);
 
-        const memoirId = result.memoirId || `${state.user.email.split('@')[0]}_${Date.now()}`;
+        // n8n should return the new memoir ID
+        const memoirId = result.memoirId || result.id;
 
         // Refresh memoir list
         state.availableMemoirs = await ApiService.getMemoirsByEmail(state.user.email);
 
-        // Select the new one immediately
-        await selectProject({ id: memoirId, name: memoirName });
+        // Select the new one immediately as requested
+        if (memoirId) {
+            await selectProject({ id: memoirId, name: memoirName });
+        } else {
+            // Fallback: refresh and go to selector
+            navigateTo('project-selector');
+        }
 
     } catch (error) {
         console.error('Redemption failed:', error);

@@ -1,26 +1,29 @@
 :root {
-  /* Premium Color Palette */
-  --color-primary: #0f172a;
-  /* Deep Navy Blue */
-  --color-primary-light: #1e293b;
-  /* Lighter Navy */
-  --color-accent: #d97706;
-  /* Warm Gold/Amber */
-  --color-accent-hover: #b45309;
-  --color-bg: #f8fafc;
-  /* Slate 50 (Creamy White) */
+  /* FondMemoirs Premium Color Palette */
+  --color-primary: #2A2A28;
+  /* Dark Charcoal */
+  --color-primary-light: #4A4A48;
+  /* Lighter Charcoal */
+  --color-accent: #C29A62;
+  /* Elegant Gold */
+  --color-accent-hover: #A8814D;
+  /* Darker Gold */
+  --color-accent-light: #EADBC8;
+  /* Lighter Golden for Locked State */
+  --color-bg: #FCFBF8;
+  /* Creamy Off-white */
   --color-surface: #ffffff;
   /* Pure White */
-  --color-text-main: #1e293b;
-  /* Slate 800 */
-  --color-text-muted: #64748b;
-  /* Slate 500 */
-  --color-border: #e2e8f0;
-  /* Slate 200 */
+  --color-surface-muted: #F3F1ED;
+  /* Light Taupe */
+  --color-text-main: #2A2A28;
+  --color-text-muted: #5A5853;
+  --color-border: #E6E2D8;
+  /* Subtle warm border */
 
   /* Typography */
   --font-main: 'Inter', sans-serif;
-  --font-heading: 'Outfit', sans-serif;
+  --font-heading: 'Playfair Display', serif;
 
   /* Spacing */
   --spacing-xs: 0.5rem;
@@ -29,10 +32,10 @@
   --spacing-lg: 2rem;
   --spacing-xl: 3rem;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  /* Shadows matching landing page style */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.08);
 }
 
 * {
@@ -106,7 +109,8 @@ h6 {
   align-items: center;
   justify-content: center;
   padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
+  border-radius: 50px;
+  /* Aligned with landing page */
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -115,13 +119,14 @@ h6 {
 }
 
 .btn-primary {
-  background-color: var(--color-primary);
+  background-color: var(--color-accent);
   color: white;
 }
 
 .btn-primary:hover {
-  background-color: var(--color-primary-light);
-  transform: translateY(-1px);
+  background-color: var(--color-accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(168, 129, 77, 0.25);
 }
 
 .btn-accent {
@@ -131,6 +136,24 @@ h6 {
 
 .btn-accent:hover {
   background-color: var(--color-accent-hover);
+}
+
+.btn-locked {
+  background-color: var(--color-accent-light);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--color-text-main);
+  border: 1px solid var(--color-accent);
+}
+
+.btn-outline:hover {
+  background-color: var(--color-accent);
+  color: white;
 }
 
 .card {
@@ -160,12 +183,13 @@ h6 {
   font-family: var(--font-main);
   font-size: 1rem;
   transition: border-color 0.2s;
+  background-color: var(--color-bg);
 }
 
 .input-field:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(194, 154, 98, 0.1);
 }
 
 .password-toggle-wrapper {
@@ -194,7 +218,7 @@ h6 {
 }
 
 .password-toggle-btn:hover {
-  color: var(--color-primary);
+  color: var(--color-accent);
 }
 
 .password-toggle-btn svg {
@@ -228,8 +252,8 @@ h6 {
 
 .nav-link:hover,
 .nav-link.active {
-  color: var(--color-primary);
-  background-color: #f1f5f9;
+  color: var(--color-accent);
+  background-color: var(--color-surface-muted);
 }
 
 /* Animations */
@@ -256,8 +280,8 @@ h6 {
 
 /* Alerts */
 .alert-box {
-  background-color: #eff6ff;
-  border-left: 4px solid var(--color-primary);
+  background-color: var(--color-surface-muted);
+  border-left: 4px solid var(--color-accent);
   padding: 1rem;
   margin-bottom: 1.5rem;
   border-radius: 0.25rem;
@@ -268,7 +292,7 @@ h6 {
 
 .alert-title {
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--color-accent);
   margin-bottom: 0.25rem;
 }
 
@@ -287,10 +311,18 @@ h6 {
   border-radius: 0.5rem;
   margin-bottom: 0.75rem;
   background: white;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.chapter-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .chapter-info h4 {
   margin-bottom: 0.25rem;
+  font-family: var(--font-main);
+  font-weight: 600;
 }
 
 .chapter-meta {
@@ -320,7 +352,7 @@ h6 {
   overflow-y: auto;
   border-left: 1px solid var(--color-border);
   padding: var(--spacing-xl) var(--spacing-md);
-  background: #f1f5f9;
+  background: var(--color-surface-muted);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
@@ -339,7 +371,7 @@ h6 {
 }
 
 .review-paragraph:hover {
-  background-color: #f8fafc;
+  background-color: var(--color-bg);
   border-color: var(--color-border);
 }
 
@@ -387,7 +419,7 @@ h6 {
 .feedback-textarea:focus {
   outline: none;
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.1);
+  box-shadow: 0 0 0 3px rgba(194, 154, 98, 0.1);
 }
 
 .review-header {
@@ -420,8 +452,8 @@ h6 {
 }
 
 .badge-pending {
-  background: #f1f5f9;
-  color: #64748b;
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
 }
 
 .badge-ready {
@@ -460,7 +492,7 @@ h6 {
   display: flex;
   align-items: start;
   gap: 0.75rem;
-  border-left: 4px solid var(--color-primary);
+  border-left: 4px solid var(--color-accent);
   animation: toast-slide-in 0.3s ease forwards;
   transition: all 0.3s ease;
 }
@@ -474,11 +506,11 @@ h6 {
 }
 
 .toast-success {
-  border-left-color: #10b981;
+  border-left-color: #3bb36a;
 }
 
 .toast-info {
-  border-left-color: #3b82f6;
+  border-left-color: var(--color-accent);
 }
 
 .toast-content {
@@ -526,15 +558,18 @@ h6 {
     opacity: 0;
   }
 }
+
 @keyframes pulse-recording {
   0% {
     box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
     transform: scale(1);
   }
+
   70% {
     box-shadow: 0 0 0 15px rgba(239, 68, 68, 0);
     transform: scale(1.05);
   }
+
   100% {
     box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
     transform: scale(1);
