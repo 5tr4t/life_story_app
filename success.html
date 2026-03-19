@@ -158,11 +158,9 @@
             }
 
             try {
-                const response = await fetch(n8nWebhookUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ stripe_session_id: sessionId })
-                });
+                // Using GET with query parameters to minimize CORS preflight issues
+                const fetchUrl = `${n8nWebhookUrl}?stripe_session_id=${encodeURIComponent(sessionId)}`;
+                const response = await fetch(fetchUrl);
 
                 if (!response.ok) throw new Error('Failed to fetch code');
 
