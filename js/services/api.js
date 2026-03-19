@@ -80,12 +80,23 @@ const ApiService = {
             headers['Authorization'] = `Bearer ${session.access_token}`;
             const userId = session.user.id;
 
+            // Log for debugging
+            console.log(`Secured request with userId: ${userId}`);
+
             // Always append userId as a query parameter for consistency
-            const urlObj = new URL(url.startsWith('http') ? url : window.location.origin + url);
-            if (!urlObj.searchParams.has('userId')) {
-                urlObj.searchParams.append('userId', userId);
+            try {
+                const urlObj = new URL(url);
+                urlObj.searchParams.set('userId', userId);
                 url = urlObj.toString();
+            } catch (e) {
+                // If it's a relative URL, manually append
+                const connector = url.includes('?') ? '&' : '?';
+                url = `${url}${connector}userId=${userId}`;
             }
+        } else {
+            console.warn("Attempted _secureFetch without an active session!");
+            // If this is a restricted endpoint, we should probably fail early
+            // For now, n8n will catch the missing header
         }
 
         const response = await fetch(url, { ...options, headers });

@@ -87,7 +87,11 @@ async function initSession() {
     } else if (savedState) {
         const parsed = JSON.parse(savedState);
         if (parsed.user) {
-            state.currentView = 'dashboard';
+            // User exists in local storage but no Supabase session found.
+            // We should try to refresh the session or force a re-login to ensure we have a token.
+            console.warn("User in storage but no Supabase session. Forcing re-authentication.");
+            state.user = null;
+            state.currentView = 'login';
         } else {
             state.currentView = 'login';
         }
