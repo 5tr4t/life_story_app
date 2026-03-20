@@ -22,6 +22,12 @@ function renderLogin(navigateTo, loginUser, signupUser, showToast, initialData =
             codeInput.value = initialData.code;
         }
 
+        // Show/hide forgot password link based on mode
+        const forgotWrapper = container.querySelector('#forgotPasswordLinkWrapper');
+        if (forgotWrapper) {
+            forgotWrapper.style.display = isLoginMode ? 'block' : 'none';
+        }
+
         if (isLoginMode) {
             title.textContent = 'Welcome Back';
             subtitle.textContent = 'Sign in to continue your journey';
@@ -94,6 +100,10 @@ function renderLogin(navigateTo, loginUser, signupUser, showToast, initialData =
                 <button type="submit" id="submitBtn" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Sign In</button>
             </form>
             
+            <div id="forgotPasswordLinkWrapper" style="margin-top: 1rem; text-align: center;">
+                <button id="forgotPasswordBtn" style="background: none; border: none; font-family: inherit; color: var(--color-text-muted); font-size: 0.875rem; cursor: pointer; text-decoration: underline;">Forgot Password?</button>
+            </div>
+            
             <div style="margin-top: 1.5rem; text-align: center; font-size: 0.875rem;">
                 <span id="toggleText" style="color: var(--color-text-muted);">Don't have an account?</span>
                 <a href="#" id="toggleLink" style="color: var(--color-primary); font-weight: 500;">Start your journey</a>
@@ -120,6 +130,7 @@ function renderLogin(navigateTo, loginUser, signupUser, showToast, initialData =
     // Attach Event Listeners
     const form = container.querySelector('#loginForm');
     const toggleLink = container.querySelector('#toggleLink');
+    const forgotPasswordBtn = container.querySelector('#forgotPasswordBtn');
 
     // Initialize toggles
     initPasswordToggles();
@@ -133,6 +144,12 @@ function renderLogin(navigateTo, loginUser, signupUser, showToast, initialData =
         updateUI();
         // Re-init toggles just in case (though they should persist in the DOM)
         initPasswordToggles();
+    });
+
+    forgotPasswordBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log('Forgot password button clicked, navigating...');
+        navigateTo('forgot-password');
     });
 
     form.addEventListener('submit', (e) => {
@@ -308,6 +325,134 @@ function renderRedeemCode(navigateTo, state, redeemNewCode, showToast) {
             navigateTo('project-selector');
         } else {
             navigateTo('dashboard'); // If no memoirs, go to dashboard (which will likely redirect to project selector if no current project)
+        }
+    });
+
+    return container;
+}
+
+/**
+ * Render a screen for users who forgot their password
+ */
+function renderForgotPassword(navigateTo, showToast) {
+    const container = document.createElement('div');
+    container.className = 'container flex items-center justify-center';
+    container.style.minHeight = '100vh';
+
+    container.innerHTML = `
+        <div class="card" style="width: 100%; max-width: 450px;">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h1 style="margin-bottom: 0.5rem;">Reset Password</h1>
+                <p style="color: var(--color-text-muted);">Enter your email to receive a reset link.</p>
+            </div>
+
+            <form id="forgotForm">
+                <div class="input-group">
+                    <label class="input-label">Email</label>
+                    <input type="email" name="email" class="input-field" placeholder="name@example.com" required>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Send Reset Link</button>
+                <button type="button" id="backBtn" class="btn" style="width: 100%; margin-top: 0.5rem; background: transparent; border: 1px solid var(--color-border); color: var(--color-text-main);">Back to Sign In</button>
+            </form>
+
+            <div id="successMessage" style="display: none; text-align: center; margin-top: 2rem;">
+                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                    <p style="margin-bottom: 1rem; font-weight: 500;">Check your email!</p>
+                    <p style="font-size: 0.875rem;">We've sent a link to reset your password. Please note that the email will arrive from <strong>'Supabase Auth'</strong> (noreply@mail.supabase.co).</p>
+                </div>
+                <button id="returnBtn" class="btn btn-primary" style="width: 100%;">Return to Sign In</button>
+            </div>
+        </div>
+    `;
+
+    const form = container.querySelector('#forgotForm');
+    const successMessage = container.querySelector('#successMessage');
+    const backBtn = container.querySelector('#backBtn');
+    const returnBtn = container.querySelector('#returnBtn');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = container.querySelector('input[name="email"]').value;
+        const submitBtn = container.querySelector('#submitBtn');
+        const originalText = submitBtn.textContent;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+
+        try {
+            await ApiService.requestPasswordReset(email);
+            form.style.display = 'none';
+            successMessage.style.display = 'block';
+        } catch (err) {
+            showToast(err.message || 'Error sending reset link', 'error');
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        }
+    });
+
+    backBtn.addEventListener('click', () => navigateTo('login'));
+    returnBtn.addEventListener('click', () => navigateTo('login'));
+
+    return container;
+}
+
+/**
+ * Render a screen to update the password (called after clicking email link)
+ */
+function renderUpdatePassword(navigateTo, showToast) {
+    const container = document.createElement('div');
+    container.className = 'container flex items-center justify-center';
+    container.style.minHeight = '100vh';
+
+    container.innerHTML = `
+        <div class="card" style="width: 100%; max-width: 450px;">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h1 style="margin-bottom: 0.5rem;">New Password</h1>
+                <p style="color: var(--color-text-muted);">Create a secure password for your account.</p>
+            </div>
+
+            <form id="resetForm">
+                <div class="input-group">
+                    <label class="input-label">New Password</label>
+                    <input type="password" name="password" class="input-field" placeholder="••••••••" required>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Confirm New Password</label>
+                    <input type="password" name="confirmPassword" class="input-field" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Update Password</button>
+            </form>
+        </div>
+    `;
+
+    const form = container.querySelector('#resetForm');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const password = container.querySelector('input[name="password"]').value;
+        const confirmPassword = container.querySelector('input[name="confirmPassword"]').value;
+        const submitBtn = container.querySelector('#submitBtn');
+
+        if (password !== confirmPassword) {
+            showToast('Passwords do not match', 'error');
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Updating...';
+
+        try {
+            await ApiService.updatePassword(password);
+            showToast('Password updated successfully! Please sign in.', 'success');
+            setTimeout(() => {
+                navigateTo('login');
+            }, 2000);
+        } catch (err) {
+            showToast(err.message || 'Error updating password', 'error');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Update Password';
         }
     });
 

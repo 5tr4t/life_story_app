@@ -63,6 +63,35 @@ const ApiService = {
     },
 
     /**
+     * Initiates a password reset process for the given email.
+     * @param {string} email 
+     * @returns {Promise<Object>}
+     */
+    async requestPasswordReset(email) {
+        if (!window.supabaseClient) throw new Error("Supabase client not initialized");
+
+        const redirectTo = window.location.origin + window.location.pathname + '#reset-password';
+        console.log(`Requesting password reset for ${email}, redirecting to ${redirectTo}`);
+
+        return await window.supabaseClient.auth.resetPasswordForEmail(email, {
+            redirectTo: redirectTo
+        });
+    },
+
+    /**
+     * Updates the current user's password.
+     * @param {string} newPassword 
+     * @returns {Promise<Object>}
+     */
+    async updatePassword(newPassword) {
+        if (!window.supabaseClient) throw new Error("Supabase client not initialized");
+
+        return await window.supabaseClient.auth.updateUser({
+            password: newPassword
+        });
+    },
+
+    /**
      * Internal fetch wrapper that injects the Supabase Authorization header if available.
      * @param {string} url 
      * @param {Object} options 
@@ -100,6 +129,15 @@ const ApiService = {
         }
 
         const response = await fetch(url, { ...options, headers });
+
+        if (response.status === 401) {
+            console.error("Session expired (401). Signing out...");
+            if (window.supabaseClient) {
+                await window.supabaseClient.auth.signOut();
+            }
+            throw new Error("Your session has expired. Please sign in again.");
+        }
+
         if (!response.ok) {
             const errorText = await response.text().catch(() => '');
             throw new Error(`API Error [${response.status}]: ${errorText || response.statusText}`);

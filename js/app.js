@@ -46,6 +46,13 @@ async function initSession() {
         return;
     }
 
+    // Check for password reset hash
+    if (window.location.hash.includes('type=recovery') || window.location.hash.includes('reset-password')) {
+        state.currentView = 'reset-password';
+        render();
+        return;
+    }
+
     const { data: { session } } = await window.supabaseClient.auth.getSession();
 
     if (session) {
@@ -159,10 +166,15 @@ function showToast(message, type = 'error', duration = 5000) {
 // Main Render Function
 function render() {
     const app = document.getElementById('app');
-    app.innerHTML = ''; // Clear current content
+    app.innerHTML = ''; // Clear content
 
-    // If not logged in and trying to access protected route, redirect to login
-    if (!state.user && state.currentView !== 'login' && state.currentView !== 'signup') {
+    // PROACTIVE SESSION CHECK:
+    // If we're entering a protected route, verify we still have a valid user object
+    // The state.user is cleared by the onAuthStateChange listener if the session expires.
+    const isPublicView = ['login', 'signup', 'forgot-password', 'reset-password'].includes(state.currentView);
+
+    if (!state.user && !isPublicView) {
+        console.warn("Access denied to protected view:", state.currentView);
         navigateTo('login');
         return;
     }
@@ -179,6 +191,12 @@ function render() {
             break;
         case 'dashboard':
             app.appendChild(renderDashboard(navigateTo, state));
+            break;
+        case 'forgot-password':
+            app.appendChild(renderForgotPassword(navigateTo, showToast));
+            break;
+        case 'reset-password':
+            app.appendChild(renderUpdatePassword(navigateTo, showToast));
             break;
         case 'setup':
             app.appendChild(renderSetup(navigateTo, state));
@@ -427,5 +445,27 @@ function getRouteFromStage(stage) {
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+    // Listen for auth changes, especially recovery and session loss
+    if (window.supabaseClient) {
+        window.supabaseClient.auth.onAuthStateChange((event, session) => {
+            console.log("Auth State Changed:", event);
+
+            if (event === 'SIGNED_OUT' || event === 'USER_UPDATED') {
+                if (!session) {
+                    // Session lost or user signed out
+                    if (state.user) {
+                        state.user = null;
+                        saveAppState();
+                        showToast("Your session has expired. Please sign in again.", "info");
+                        navigateTo('login');
+                    }
+                }
+            }
+
+            if (event === 'PASSWORD_RECOVERY') {
+                navigateTo('reset-password');
+            }
+        });
+    }
     render();
 });
