@@ -343,19 +343,26 @@ const ApiService = {
      */
     async getMemoirsByEmail(email, userId = null) {
         try {
-            console.log(`Fetching memoirs for ${email} (ID: ${userId}) directly from Supabase`);
-
             if (!window.supabaseClient) {
                 throw new Error("Supabase client not initialized");
             }
 
-            let query = window.supabaseClient.from('memoirs').select('*');
-
-            if (userId) {
-                query = query.eq('profile_id', userId);
-            } else {
-                query = query.eq('user_email', email);
+            // If userId isn't provided, try to fetch it from the active session
+            if (!userId) {
+                const { data: { session } } = await window.supabaseClient.auth.getSession();
+                if (session && session.user) {
+                    userId = session.user.id;
+                }
             }
+
+            console.log(`Fetching memoirs for ${email} (ID: ${userId}) directly from Supabase`);
+
+            if (!userId) {
+                console.warn("No user ID available to query memoirs.");
+                return this._getMemoirsViaWebhook(email);
+            }
+
+            let query = window.supabaseClient.from('memoirs').select('*').eq('profile_id', userId);
 
             const { data, error } = await query;
 

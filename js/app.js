@@ -299,7 +299,11 @@ async function signupUser(name, email, password, code, memoirName, onComplete) {
         });
 
         // 2. If successful, backend should return the new memoir ID
-        const memoirId = result.memoirId || `${email.split('@')[0]}_${Date.now()}`;
+        let memoirId = result.memoirId;
+        // Protect against un-evaluated expressions from n8n webhook
+        if (!memoirId || memoirId.includes('$(')) {
+            memoirId = `${email.split('@')[0]}_${Date.now()}`;
+        }
 
         state.user = { id: memoirId, name, email, memoirName };
         saveAppState();
@@ -334,11 +338,22 @@ async function redeemNewCode(code, memoirName) {
 
         const result = await ApiService.redeemAdditionalCode(code, memoirName);
 
-        // n8n should return the new memoir ID
-        const memoirId = result.memoirId || result.id;
+        // n8n should return the new memoir ID, check for un-evaluated expression
+        let memoirId = result.memoirId || result.id;
+        if (memoirId && memoirId.includes('$(')) {
+            memoirId = null; // Ignore invalid ID
+        }
 
         // Refresh memoir list
         state.availableMemoirs = await ApiService.getMemoirsByEmail(state.user.email);
+
+        // Try to find the new memoir from the refreshed list by name if memoirId is missing or invalid
+        if (!memoirId && state.availableMemoirs && state.availableMemoirs.length > 0) {
+            const newlyCreated = state.availableMemoirs.find(m => m.name === memoirName);
+            if (newlyCreated) {
+                memoirId = newlyCreated.id;
+            }
+        }
 
         // Select the new one immediately as requested
         if (memoirId) {
