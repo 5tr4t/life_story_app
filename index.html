@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="css/landing.css">
     <!-- Feather Icons for the process section -->
     <script src="https://unpkg.com/feather-icons"></script>
+    <script>document.documentElement.classList.add('js-enabled');</script>
 </head>
 
 <body>
@@ -24,6 +25,9 @@
     <header class="site-header reveal-on-scroll">
         <div class="header-container">
             <div class="logo">FondMemoirs</div>
+            <button class="mobile-menu-toggle" aria-label="Toggle Menu">
+                <i data-feather="menu"></i>
+            </button>
             <nav class="nav-links">
                 <a href="#how-it-works" class="nav-link">How it Works</a>
                 <a href="#the-keepsake" class="nav-link">The Keepsake</a>
@@ -36,6 +40,9 @@
     <div class="sticky-cta-bar" id="sticky-cta">
         <div class="sticky-container">
             <div class="logo logo-small">FondMemoirs</div>
+            <button class="mobile-menu-toggle" aria-label="Toggle Menu">
+                <i data-feather="menu"></i>
+            </button>
             <a href="#checkout" class="btn btn-primary btn-small">Start the Journey Now</a>
         </div>
     </div>
@@ -386,7 +393,7 @@
                     </button>
                     <div class="faq-answer">
                         <p>Our dedicated support team is here to help! Simply send an email to <a
-                                href="mailto:contact@fondmemoirsr.com"
+                                href="mailto:contact@fondmemoirs.com"
                                 style="color: var(--color-accent); text-decoration: underline;">contact@fondmemoirs.com</a>
                             and we will assist you right away.</p>
                     </div>
@@ -437,7 +444,7 @@
             const observerOptions = {
                 root: null,
                 rootMargin: '0px',
-                threshold: 0.15
+                threshold: 0.05 // Lower threshold for more reliable trigger
             };
 
             const observer = new IntersectionObserver((entries, observer) => {
@@ -449,14 +456,16 @@
                 });
             }, observerOptions);
 
-            const revealElements = document.querySelectorAll('.reveal-on-scroll');
+            // Observe elements except those that should be visible immediately
+            const revealElements = document.querySelectorAll('.reveal-on-scroll:not(.site-header)');
             revealElements.forEach(el => observer.observe(el));
 
-            // Trigger initial delays for hero
-            const heroElements = document.querySelectorAll('[class*="reveal-delay-"]');
-            setTimeout(() => {
-                heroElements.forEach(el => el.classList.add('is-visible'));
-            }, 100);
+            // Trigger initial delays for hero (immediately visible)
+            const heroElements = document.querySelectorAll('[class*="reveal-delay-"][class*="hero"]');
+            heroElements.forEach(el => el.classList.add('is-visible'));
+
+            // Initial icon replacement for new mobile toggle
+            feather.replace();
 
             // Sticky Header Logic
             const stickyCta = document.getElementById('sticky-cta');
@@ -513,6 +522,41 @@
                 });
             });
 
+            // Mobile Menu Toggle logic
+            const menuToggles = document.querySelectorAll('.mobile-menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+
+            if (menuToggles.length > 0 && navLinks) {
+                menuToggles.forEach(toggle => {
+                    toggle.addEventListener('click', () => {
+                        navLinks.classList.toggle('active');
+                        // Update icons for ALL toggles
+                        menuToggles.forEach(t => {
+                            const icon = t.querySelector('i');
+                            if (icon) {
+                                if (navLinks.classList.contains('active')) {
+                                    icon.setAttribute('data-feather', 'x');
+                                } else {
+                                    icon.setAttribute('data-feather', 'menu');
+                                }
+                            }
+                        });
+                        feather.replace();
+                    });
+                });
+
+                // Close menu when clicking a link
+                navLinks.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', () => {
+                        navLinks.classList.remove('active');
+                        menuToggles.forEach(t => {
+                            const icon = t.querySelector('i');
+                            if (icon) icon.setAttribute('data-feather', 'menu');
+                        });
+                        feather.replace();
+                    });
+                });
+            }
         });
     </script>
 </body>

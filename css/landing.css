@@ -137,7 +137,7 @@ a {
     left: 0;
     width: 100%;
     padding: 2rem 5%;
-    z-index: 100;
+    z-index: 1001; /* Above sticky cta initially */
 }
 
 .header-container {
@@ -158,6 +158,26 @@ a {
     display: flex;
     gap: 2.5rem;
     align-items: center;
+}
+
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--color-text-main);
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: 1001;
+    line-height: 0;
+}
+
+.mobile-menu-toggle i,
+.mobile-menu-toggle svg {
+    width: 28px;
+    height: 28px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
 }
 
 .nav-link {
@@ -217,6 +237,7 @@ a {
 /* Sections Global Styles */
 section {
     padding: 6rem 5%;
+    scroll-margin-top: 80px;
 }
 
 .section-title {
@@ -798,13 +819,9 @@ section {
     color: white;
 }
 
-/* Reveal Animations */
-.reveal-on-scroll,
-.reveal-delay-1,
-.reveal-delay-2,
-.reveal-delay-3,
-.reveal-delay-4,
-.reveal-delay-5 {
+/* Reveal Animations - Prevent blank screen by allowing Hero to show immediately */
+.js-enabled .reveal-on-scroll:not(.site-header),
+.js-enabled [class*="reveal-delay-"]:not([class*="hero"]) { 
     opacity: 0;
     transform: translateY(30px);
     transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -856,8 +873,8 @@ section {
 }
 
 .is-visible {
-    opacity: 1;
-    transform: translateY(0);
+    opacity: 1 !important;
+    transform: translateY(0) !important;
 }
 
 /* Responsive Overrides */
@@ -900,8 +917,35 @@ section {
 }
 
 @media (max-width: 768px) {
+    .mobile-menu-toggle {
+        display: block;
+    }
+
     .nav-links {
-        display: none;
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: var(--color-bg);
+        padding: 8rem 5% 2rem 5%;
+        gap: 2rem;
+        z-index: 1000;
+        transform: translateX(100%);
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        text-align: center;
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-links.active {
+        transform: translateX(0);
+    }
+
+    .nav-link {
+        font-size: 1.5rem;
+        font-family: var(--font-serif);
     }
 
     .footer-container {
