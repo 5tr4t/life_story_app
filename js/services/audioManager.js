@@ -11,6 +11,8 @@ window.AudioManager = {
     analyser: null,
     vadCallback: null,
     isVADPaused: false,
+    recordingVolumeHistory: [],
+    isVolumeMonitoring: false,
 
     // Initialize Solo Mode (Mic only)
     async initSoloMode() {
@@ -65,6 +67,8 @@ window.AudioManager = {
     setupVAD(stream) {
         if (!this.audioContext) {
             this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        } else if (this.audioContext.state === 'suspended') {
+            this.audioContext.resume();
         }
 
         const source = this.audioContext.createMediaStreamSource(stream);
@@ -76,17 +80,22 @@ window.AudioManager = {
         const dataArray = new Uint8Array(bufferLength);
 
         const checkVolume = () => {
-            if (this.isVADPaused) {
-                requestAnimationFrame(checkVolume);
-                return;
-            }
-
             this.analyser.getByteFrequencyData(dataArray);
             let sum = 0;
             for (let i = 0; i < bufferLength; i++) {
                 sum += dataArray[i];
             }
             const average = sum / bufferLength;
+
+            // Track volume history if monitoring
+            if (this.isVolumeMonitoring) {
+                this.recordingVolumeHistory.push(average);
+            }
+
+            if (this.isVADPaused) {
+                requestAnimationFrame(checkVolume);
+                return;
+            }
 
             // Threshold for speech (approx)
             if (average > 30 && this.vadCallback) {
@@ -109,6 +118,23 @@ window.AudioManager = {
 
     resumeVAD() {
         this.isVADPaused = false;
+    },
+
+    startVolumeMonitor() {
+        this.recordingVolumeHistory = [];
+        this.isVolumeMonitoring = true;
+    },
+
+    stopVolumeMonitor() {
+        this.isVolumeMonitoring = false;
+        const avg = this.getAverageVolume();
+        return avg;
+    },
+
+    getAverageVolume() {
+        if (!this.recordingVolumeHistory.length) return 0;
+        const sum = this.recordingVolumeHistory.reduce((a, b) => a + b, 0);
+        return sum / this.recordingVolumeHistory.length;
     },
 
     async stopAll() {

@@ -87,6 +87,12 @@ function renderInterviews(navigateTo, state) {
                 }
             });
         });
+
+        container.querySelectorAll('.review-draft-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                navigateTo('review-draft');
+            });
+        });
     }
 
     function renderChapterList() {
@@ -152,7 +158,7 @@ function renderInterviews(navigateTo, state) {
                 statusIcon = '✓';
                 statusText = 'Completed';
                 statusColor = '#166534';
-                buttonText = 'Review';
+                buttonText = 'Review Questions';
                 buttonClass = 'btn-outline';
                 buttonDisabled = '';
             } else if (isActive) {
@@ -194,14 +200,19 @@ function renderInterviews(navigateTo, state) {
                         <span style="color: var(--color-text-muted); font-size: 0.875rem;">
                             ${chapter.questions?.length || 0} questions
                         </span>
-                        <button 
-                            class="btn ${buttonClass} chapter-btn" 
-                            data-chapter="${chapterNumber}"
-                            data-status="${status || ''}"
-                            ${buttonDisabled}
-                        >
-                            ${buttonText}
-                        </button>
+                        <div class="flex gap-sm">
+                            ${isActuallyCompleted ? `
+                                <button class="btn btn-primary review-draft-btn" data-chapter="${chapterNumber}">Review Draft</button>
+                            ` : ''}
+                            <button 
+                                class="btn ${buttonClass} chapter-btn" 
+                                data-chapter="${chapterNumber}"
+                                data-status="${status || ''}"
+                                ${buttonDisabled}
+                            >
+                                ${buttonText}
+                            </button>
+                        </div>
                     </div>
                 </div>
             `;

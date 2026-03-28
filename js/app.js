@@ -17,7 +17,9 @@ const defaultState = {
     clarificationSubmissionTimes: {}, // Map of chapterNum -> timestamp
     writingStyleSet: false,
     pendingDraftFeedback: null, // { chapterNumber, feedback }
-    initialAuthData: {} // { mode, code }
+    initialAuthData: {}, // { mode, code }
+    submittedFeedback: {}, // { chapterNumber: versionStr }
+    pendingVoiceSubmissions: {} // { chapterNumber: { responses: {}, startedAt: timestamp } }
 };
 
 // Load from localStorage
@@ -417,15 +419,24 @@ async function selectProject(memoir) {
 
 // Helper to load progress (extracted from old loginUser)
 async function loadUserProgress(userId) {
-    const response = await ApiService.getUserProgress(userId);
-    console.log('User progress raw:', response);
+    const [progressResponse, chaptersResponse] = await Promise.all([
+        ApiService.getUserProgress(userId).catch(e => {
+            console.error("Failed to load progress:", e);
+            return null;
+        }),
+        ApiService.getChapters(userId).catch(e => {
+            console.error("Failed to load live chapters on login:", e);
+            return null;
+        })
+    ]);
+    console.log('User progress raw:', progressResponse);
 
     // Handle array response format from n8n
-    const progress = Array.isArray(response) ? response[0] : response;
+    const progress = Array.isArray(progressResponse) ? progressResponse[0] : progressResponse;
 
     if (progress) {
         state.current_stage = progress.current_stage || state.current_stage || '1';
-        // Chapters might be at root or under data property
+        // Chapters might be at root or under data property (fallback)
         state.chapters = progress.chapters || (progress.data && progress.data.chapters) || state.chapters || [];
         state.answers = progress.answers || (progress.data && progress.data.answers) || {};
         state.setupData = progress.setup_data || (progress.data && progress.data.setup_data) || {};
@@ -435,7 +446,6 @@ async function loadUserProgress(userId) {
         }
 
         // IMPORTANT: Sync writingStyleSet with backend data
-        // If DB was reset, this will be undefined/false, forcing the Style Tuner again
         state.writingStyleSet = progress.writing_style_set || (progress.data && progress.data.writing_style_set) || false;
 
         // Update journey flags based on stage
@@ -445,6 +455,11 @@ async function loadUserProgress(userId) {
             state.journeyProgress.setup = true;
             state.journeyProgress.questions = true;
         }
+    }
+
+    // Always prefer the live chapter data directly from Supabase/n8n to ensure correct review statuses
+    if (chaptersResponse && chaptersResponse.chapters && chaptersResponse.chapters.length > 0) {
+        state.chapters = chaptersResponse.chapters;
     }
 }
 
@@ -457,6 +472,55 @@ function getRouteFromStage(stage) {
     if (stage === '5') return 'dashboard'; // Completed
     return 'dashboard';
 }
+
+/**
+ * Background Processor for "Submit & Forget" Voice Clarifications
+ */
+async function checkPendingVoiceSubmissions() {
+    const pending = state.pendingVoiceSubmissions || {};
+    const chapterNums = Object.keys(pending);
+
+    if (chapterNums.length === 0) return;
+
+    for (const chapterNum of chapterNums) {
+        const submission = pending[chapterNum];
+        const responses = submission.responses;
+
+        // Check if all items in this submission are finished transcribing
+        const itemIds = Object.keys(responses);
+        const isStillTranscribing = itemIds.some(id => responses[id].isTranscribing);
+
+        if (!isStillTranscribing) {
+            console.log(`[Background] All transcriptions ready for Chapter ${chapterNum}. Submitting...`);
+
+            try {
+                // Remove the extra metadata before final API call
+                const cleanResponses = {};
+                for (const id of itemIds) {
+                    cleanResponses[id] = {
+                        answer: responses[id].answer,
+                        correction: responses[id].correction
+                    };
+                }
+
+                await ApiService.submitClarifications(state.user.id, parseInt(chapterNum), cleanResponses);
+
+                // Success! Record the time and clear the pending entry
+                state.clarificationSubmissionTimes[chapterNum] = Date.now();
+                delete state.pendingVoiceSubmissions[chapterNum];
+                saveAppState();
+
+                showToast(`✓ Background: Responses for Chapter ${chapterNum} submitted!`, 'success');
+            } catch (err) {
+                console.error(`[Background] Failed to submit clarifications for Chapter ${chapterNum}:`, err);
+                // We'll retry on the next interval
+            }
+        }
+    }
+}
+
+// Start the background worker
+setInterval(checkPendingVoiceSubmissions, 5000); // Check every 5 seconds
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {

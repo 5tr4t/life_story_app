@@ -30,7 +30,10 @@ function renderChapterQuestions(navigateTo, state) {
     // then this is a "previous" question and should be read-only.
     // 1-based comparison: (chapterNum < serverChapter) OR (chapterNum == serverChapter AND currentQuestionNum < serverQuestion)
     const currentQuestionNum = (state.viewingQuestionNum && state.viewingChapterNum === chapterNum) ? state.viewingQuestionNum : serverQuestion;
-    const isPastQuestion = (chapterNum < serverChapter) || (chapterNum === serverChapter && currentQuestionNum < serverQuestion);
+
+    // If we're explicitly editing a past chapter, unlock it regardless of server-saved stage
+    const isEditing = !!state.isEditingPastChapter;
+    const isPastQuestion = !isEditing && ((chapterNum < serverChapter) || (chapterNum === serverChapter && currentQuestionNum < serverQuestion));
 
     const currentQuestionIndex = currentQuestionNum - 1;
     const question = chapter.questions[currentQuestionIndex];
@@ -254,6 +257,7 @@ function renderChapterQuestions(navigateTo, state) {
     let startTime = null;
     let timerInterval = null;
     let currentBlob = null;
+    let averageVolume = 0;
     const projectPrefix = (state.user && state.user.id) ? state.user.id : 'anon';
     const recordingKey = `audio_${projectPrefix}_${chapterNum}_${currentQuestionNum}`;
 
@@ -367,6 +371,10 @@ function renderChapterQuestions(navigateTo, state) {
                 micIconSvg.style.display = 'block';
                 stopIconSvg.style.display = 'none';
 
+                // Stop volume monitor and get average
+                averageVolume = window.AudioManager.stopVolumeMonitor();
+                console.log(`Average Recording Volume: ${averageVolume}`);
+
                 recordingStatusText.textContent = '● PAUSED';
                 recordingStatusText.style.color = '#64748b';
                 hintElem.textContent = 'Recording paused. Resume, re-record, or submit.';
@@ -379,6 +387,7 @@ function renderChapterQuestions(navigateTo, state) {
             if (mediaRecorder && mediaRecorder.state === 'paused') {
                 // Resume
                 mediaRecorder.resume();
+                window.AudioManager.startVolumeMonitor();
                 startTimer();
 
                 waveformContainer.classList.add('recording');
@@ -414,6 +423,7 @@ function renderChapterQuestions(navigateTo, state) {
                 };
 
                 mediaRecorder.start();
+                window.AudioManager.startVolumeMonitor();
                 startTimer();
                 window.AudioManager.pauseVAD();
                 if (vadPrompt) vadPrompt.style.display = 'none';
@@ -445,6 +455,7 @@ function renderChapterQuestions(navigateTo, state) {
                 // Stop the recorder if it's paused or recording
                 if (mediaRecorder && mediaRecorder.state !== 'inactive') {
                     mediaRecorder.stop();
+                    window.AudioManager.stopVolumeMonitor();
                 }
 
                 await window.AudioStorage.deleteRecording(recordingKey);
@@ -489,12 +500,47 @@ function renderChapterQuestions(navigateTo, state) {
                 return false;
             }
 
+            // Audio Quality Check
+            const avgVol = averageVolume;
+            console.log(`Final sync check - Size: ${currentBlob.size}, Avg Vol: ${avgVol}`);
+
+            if (currentBlob.size < 2000) {
+                saveStatus.textContent = '⚠ Recording too short/empty';
+                alert("The recording seems too short. Please try again.");
+                return false;
+            }
+
+            if (avgVol < 1) {
+                saveStatus.textContent = '⚠ Very low volume detected';
+                if (!confirm(`We detected very low volume (${avgVol.toFixed(1)}). This might result in a poor transcription. Save anyway?`)) {
+                    return false;
+                }
+            }
+
             // 1. Upload audio
             const currentStage = `3.${chapterNum}.${currentQuestionNum}`;
             const fileName = `${state.user.id.toLowerCase()}_ch${chapterNum}_q${currentQuestionNum}_${Date.now()}.webm`;
-            await ApiService.uploadLargeAudio(state.user.id, fileName, currentStage, currentBlob, (percent) => {
-                saveStatus.textContent = `Uploading: ${percent}%`;
-            });
+
+            saveStatus.textContent = 'Uploading recording...';
+            try {
+                const uploadResult = await ApiService.uploadLargeAudio(state.user.id, fileName, currentStage, currentBlob, (percent) => {
+                    saveStatus.textContent = `Uploading: ${percent}%`;
+                });
+
+                console.log('Upload completed:', uploadResult);
+
+                // Check for backend-reported quality issues
+                if (uploadResult && uploadResult.status === 'failed') {
+                    saveStatus.textContent = '⚠ Backend validation failed';
+                    alert(`We couldn't capture that correctly: ${uploadResult.message || "Quality check failed"}\n\nPlease try re-recording your answer for this question.`);
+                    return false;
+                }
+            } catch (err) {
+                console.error('Upload failed:', err);
+                saveStatus.textContent = '⚠ Upload failed';
+                alert(`We couldn't capture that correctly: ${err.message || "Connection error"}\n\nPlease try re-recording your answer for this question.`);
+                return false;
+            }
 
             // 2. Sync stage
             saveStatus.textContent = 'Syncing progress...';
@@ -515,6 +561,9 @@ function renderChapterQuestions(navigateTo, state) {
 
     // Cleanup and Navigation
     const cleanupAndNavigate = async (view) => {
+        if (view !== 'chapter-questions') {
+            delete state.isEditingPastChapter;
+        }
         await window.AudioManager.stopAll();
         navigateTo(view);
     };

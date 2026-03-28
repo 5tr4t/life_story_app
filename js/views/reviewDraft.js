@@ -76,15 +76,26 @@ function renderReviewDraft(navigateTo, state) {
                             ${chapters.map(ch => {
                 const draft = allDrafts.find(d => (d.chapter_number || d.chapterNumber) === ch.chapterNumber);
                 const isDraftReady = !!draft;
-                const isFinal = isDraftReady && draft.version === 'final';
+                const draftVersion = draft ? (draft.version || '1') : null;
+                const isFinal = isDraftReady && draftVersion === 'final';
 
-                const badgeClass = isDraftReady
-                    ? (isFinal ? 'badge-ready' : 'badge-draft')
-                    : 'badge-pending';
+                const isRedrafting = isDraftReady && !isFinal && state.submittedFeedback && state.submittedFeedback[ch.chapterNumber] === draftVersion;
 
-                const statusLabel = isDraftReady
-                    ? (isFinal ? 'Ready' : 'Draft v' + (draft.version || '1'))
-                    : 'Pending';
+                let badgeClass = 'badge-pending';
+                let statusLabel = 'Pending';
+
+                if (isDraftReady) {
+                    if (isFinal) {
+                        badgeClass = 'badge-ready';
+                        statusLabel = 'Ready';
+                    } else if (isRedrafting) {
+                        badgeClass = 'badge-pending';
+                        statusLabel = 'Redrafting';
+                    } else {
+                        badgeClass = 'badge-draft';
+                        statusLabel = 'Draft v' + draftVersion;
+                    }
+                }
 
                 return `
                                     <div class="chapter-row" style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border: 1px solid var(--color-border); border-radius: 0.75rem; background: white;">
@@ -93,8 +104,8 @@ function renderReviewDraft(navigateTo, state) {
                                             <div style="margin-top: 0.5rem;"><span class="badge ${badgeClass}">${statusLabel}</span></div>
                                         </div>
                                         ${isDraftReady ? `
-                                            <button class="btn btn-primary review-btn" data-chapter="${ch.chapterNumber}">
-                                                ${isFinal ? 'Read Final' : 'Review Draft'}
+                                            <button class="btn ${isRedrafting ? 'btn-outline' : 'btn-primary'} review-btn" data-chapter="${ch.chapterNumber}">
+                                                ${isFinal ? 'Read Final' : (isRedrafting ? 'View Draft (Redrafting)' : 'Review Draft')}
                                             </button>
                                         ` : `
                                             <span style="font-style: italic; font-size: 0.9rem; color: var(--color-text-muted);">Interviews in progress...</span>
@@ -174,8 +185,10 @@ function renderReviewDraft(navigateTo, state) {
      * View 2: Detailed Review / Reader
      */
     const renderDetail = () => {
-        const isFinal = selectedChapter.version === 'final';
-        const feedbackMap = {};
+        const chapterNum = selectedChapter.chapter_number || selectedChapter.chapterNumber;
+        const draftVersion = selectedChapter.version || '1';
+        const isFinal = draftVersion === 'final';
+        const isRedrafting = !isFinal && state.submittedFeedback && state.submittedFeedback[chapterNum] === draftVersion;
 
         // Process sections from content_sections
         let globalParagraphIndex = 0;
@@ -202,7 +215,7 @@ function renderReviewDraft(navigateTo, state) {
                         </h2>
                     </div>
                     <div class="flex gap-sm">
-                        ${!isFinal ? `
+                        ${!isFinal && !isRedrafting ? `
                             <button id="submitFeedbackBtn" class="btn btn-primary">Submit Feedback</button>
                         ` : `<button class="btn" disabled>Read Only</button>`}
                     </div>
@@ -230,7 +243,7 @@ function renderReviewDraft(navigateTo, state) {
                     </div>
                 </main>
 
-                <aside class="feedback-pane" id="feedbackPane" style="${isFinal ? 'display: none;' : ''}">
+                <aside class="feedback-pane" id="feedbackPane" style="${isFinal || isRedrafting ? 'display: none;' : ''}">
                     <div class="feedback-header" style="margin-bottom: 1rem;">
                         <h3 style="font-size: 1rem;">Feedback</h3>
                         <p style="font-size: 0.8rem; color: var(--color-text-muted);">Click a paragraph to add comments.</p>
@@ -256,7 +269,7 @@ function renderReviewDraft(navigateTo, state) {
             render();
         });
 
-        if (!isFinal) {
+        if (!isFinal && !isRedrafting) {
             const storyPane = container.querySelector('#storyPane');
             const allParagraphEls = container.querySelectorAll('.review-paragraph');
             const allFeedbackItems = container.querySelectorAll('.feedback-item');
@@ -317,6 +330,11 @@ function renderReviewDraft(navigateTo, state) {
 
                 try {
                     await ApiService.submitDraftFeedback(state.user.id, chapterNum, feedbackList, state.user.memoirName);
+
+                    if (!state.submittedFeedback) state.submittedFeedback = {};
+                    state.submittedFeedback[chapterNum] = draftVersion;
+                    saveAppState();
+
                     alert('Feedback submitted!');
                     currentView = 'TOC';
                     render();

@@ -22,6 +22,7 @@ const API_CONFIG = {
     REGISTER_WEBHOOK: 'https://primary-production-adbb0.up.railway.app/webhook/46d8e10a-ad06-4990-8a50-dbeeb57f1181',
     ADD_MEMOIR_WEBHOOK: 'https://primary-production-adbb0.up.railway.app/webhook/c1bbceed-1b43-4fdb-9723-7829d40cb936',
     STYLE_PERSONA_WEBHOOK: 'https://primary-production-adbb0.up.railway.app/webhook/1019140e-e429-4f1e-ba6f-bd0ba1f9eba6',
+    AUDIO_TRANSCRIBE_WEBHOOK: 'https://primary-production-adbb0.up.railway.app/webhook/15b2d8d6-3dd0-4edf-bda6-63350642d447',
 
 
     // Old webhooks - n8n cloud
@@ -124,8 +125,6 @@ const ApiService = {
             }
         } else {
             console.warn("Attempted _secureFetch without an active session!");
-            // If this is a restricted endpoint, we should probably fail early
-            // For now, n8n will catch the missing header
         }
 
         const response = await fetch(url, { ...options, headers });
@@ -140,7 +139,19 @@ const ApiService = {
 
         if (!response.ok) {
             const errorText = await response.text().catch(() => '');
-            throw new Error(`API Error [${response.status}]: ${errorText || response.statusText}`);
+            let message = `API Error [${response.status}]`;
+
+            try {
+                const errorData = JSON.parse(errorText);
+                message = errorData.message || errorData.error || message;
+            } catch (e) {
+                if (errorText) message = `${message}: ${errorText}`;
+            }
+
+            const error = new Error(message);
+            error.status = response.status;
+            error.responseText = errorText;
+            throw error;
         }
         return response;
     },
@@ -586,13 +597,29 @@ const ApiService = {
                 });
 
                 if (!response.ok) {
-                    throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+                    let errorData;
+                    try {
+                        errorData = await response.json();
+                    } catch (e) {
+                        throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+                    }
+                    // Throw a structured error that can be caught by the view
+                    throw {
+                        status: response.status,
+                        message: errorData.message || errorData.error || `Server returned ${response.status}`,
+                        data: errorData
+                    };
                 }
 
                 return await response.json();
             } catch (error) {
+                // If it's a structured error we just threw, don't retry if it's a validation error (400, 422)
+                if (error.status === 400 || error.status === 422) {
+                    throw error;
+                }
+
                 attempts++;
-                console.warn(`Upload attempt ${attempts} failed for chunk ${chunkIndex + 1}:`, error.message);
+                console.warn(`Upload attempt ${attempts} failed for chunk ${chunkIndex + 1}:`, error.message || error);
 
                 if (attempts < maxAttempts) {
                     // Wait before retrying (exponentialish backoff: 1s, 2s)
@@ -610,6 +637,43 @@ const ApiService = {
     },
 
     /**
+     * Transcribe a short audio snippet via backend
+     * @param {string} base64Data - Full audio blob as base64
+     * @param {number} chapterNum - For context
+     * @param {string} itemId - Clarification item ID
+     * @returns {Promise<Object>} - { text: "..." }
+     */
+    async transcribeAudio(base64Data, chapterNum, itemId) {
+        try {
+            const session = await this._getSession();
+            const userId = session?.user?.id || 'Anonymous';
+            const token = session?.access_token || '';
+
+            const response = await this._secureFetch(API_CONFIG.AUDIO_TRANSCRIBE_WEBHOOK, {
+                method: 'POST',
+                body: JSON.stringify({
+                    userId,
+                    token,
+                    userName: window.state?.userName || 'Anonymous', // memoir ID used across the app
+                    chapterNum,
+                    itemId,
+                    data: base64Data,
+                    type: 'clarification'
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Transcription failed: ${response.statusText}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Transcription API error:', error);
+            throw error;
+        }
+    },
+
+    /**
      * Utility to split a Blob into chunks and upload them
      * @param {string} userName 
      * @param {string} fileName 
@@ -620,6 +684,7 @@ const ApiService = {
     async uploadLargeAudio(userName, fileName, questionStage, blob, onProgress = null) {
         const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB chunks
         const totalChunks = Math.ceil(blob.size / CHUNK_SIZE);
+        let result = null;
 
         for (let i = 0; i < totalChunks; i++) {
             const start = i * CHUNK_SIZE;
@@ -636,12 +701,17 @@ const ApiService = {
                 reader.readAsDataURL(chunk);
             });
 
-            await this.uploadAudioChunk(userName, fileName, questionStage, i, totalChunks, base64Data);
+            const chunkResponse = await this.uploadAudioChunk(userName, fileName, questionStage, i, totalChunks, base64Data);
+
+            if (i === totalChunks - 1) {
+                result = chunkResponse;
+            }
 
             if (onProgress) {
                 onProgress(Math.round(((i + 1) / totalChunks) * 100));
             }
         }
+        return result;
     },
 
     /**

@@ -579,3 +579,46 @@ h6 {
 .pulse-recording {
   animation: pulse-recording 2s infinite;
 }
+
+/* Voice Recording Styles */
+.voice-icon-btn {
+  position: absolute;
+  right: 0.75rem;
+  top: 0.75rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: white;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  z-index: 2;
+}
+
+.voice-icon-btn:hover {
+  background-color: var(--color-bg);
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+  transform: scale(1.05);
+}
+
+.voice-icon-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.voice-icon-btn.recording {
+  background-color: #ef4444;
+  color: white;
+  border-color: #ef4444;
+  animation: pulse-recording 1.5s infinite;
+}
+
+.voice-icon-btn.recording:hover {
+  background-color: #dc2626;
+}
