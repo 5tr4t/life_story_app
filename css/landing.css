@@ -329,7 +329,7 @@ section {
 .chapters-showreel {
     background-color: var(--color-surface);
     overflow: hidden;
-    padding: 8rem 0;
+    padding: 5rem 0;
     /* Full bleed */
 }
 
@@ -341,7 +341,7 @@ section {
 
 .showreel-text {
     max-width: 800px;
-    margin: 0 auto 4rem auto;
+    margin: 0 auto 2.5rem auto;
 }
 
 .polaroid-grid {
@@ -391,7 +391,7 @@ section {
     display: flex;
     align-items: center;
     gap: 5rem;
-    padding: 6rem 5%;
+    padding: 4rem 5%;
 }
 
 .layout-reverse {
@@ -420,7 +420,7 @@ section {
 }
 
 .process-header {
-    margin-bottom: 4rem;
+    margin-bottom: 2.5rem;
 }
 
 .process-grid {
@@ -484,8 +484,8 @@ section {
 /* Detailed Process Flow Timeline */
 .detailed-flow {
     max-width: 700px;
-    margin: 4rem auto 0 auto;
-    padding-top: 3rem;
+    margin: 2.5rem auto 0 auto;
+    padding-top: 2rem;
     border-top: 1px solid rgba(42, 42, 40, 0.1);
     animation: fadeIn 0.6s ease forwards;
 }
@@ -575,7 +575,7 @@ section {
 .pricing-section {
     position: relative;
     background-color: var(--color-surface-dark);
-    padding: 8rem 5%;
+    padding: 5rem 5%;
 }
 
 .pricing-container {
@@ -785,7 +785,7 @@ section {
     background-color: #1A1A19;
     /* Even darker for true footer */
     color: #999;
-    padding: 4rem 5%;
+    padding: 2.5rem 5%;
 }
 
 .footer-container {
@@ -976,7 +976,7 @@ section {
    Comparison Section 
    ========================================= */
 .comparison-section {
-    padding: 6rem 0;
+    padding: 4rem 0;
     background-color: var(--color-bg); 
 }
 
@@ -1001,7 +1001,7 @@ section {
 }
 
 .comparison-table th, .comparison-table td {
-    padding: 1.5rem 1.25rem;
+    padding: 1rem 0.8rem;
     border-bottom: 1px solid var(--color-surface);
     vertical-align: top;
     color: var(--color-text-main);
@@ -1047,6 +1047,6 @@ section {
 
 .comparison-table .price-row td {
     font-size: 1.05rem;
-    padding-top: 2rem;
-    padding-bottom: 2rem;
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
 }

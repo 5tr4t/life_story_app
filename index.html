@@ -209,7 +209,7 @@
                         <div class="flow-content">
                             <h4>5. The Final Masterpiece</h4>
                             <p>Once we get your final sign-off, the memoir is complete, sent to the press, and your
-                                physical books are printed and shipped.</p>
+                                physical book(s) is(are) printed and shipped.</p>
                         </div>
                     </div>
                 </div>
@@ -293,7 +293,7 @@
                         </tr>
                         <tr class="price-row">
                             <td class="feature-label">Price</td>
-                            <td class="highlight"><strong>$59</strong> <br><small>(Promotional price)</small></td>
+                            <td class="highlight" id="comparison-promo-price"><strong>$59</strong> <br><small>(Promotional price, all-inclusive)</small></td>
                             <td>Starts at $3,000</td>
                             <td>Starts at $59 - $99/year</td>
                             <td>Starts at $79/year</td>
@@ -643,6 +643,24 @@
                         feather.replace();
                     });
                 });
+            }
+
+            // UK Pricing Localization
+            try {
+                const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                const isUK = (tz && tz.includes('London')) || (navigator.language && navigator.language.startsWith('en-GB'));
+                
+                if (isUK) {
+                    const priceMain = document.querySelector('.price-current');
+                    const priceStrike = document.querySelector('.price-strikethrough');
+                    const compPrice = document.getElementById('comparison-promo-price');
+                    
+                    if (priceMain) priceMain.textContent = '£49.00';
+                    if (priceStrike) priceStrike.textContent = '£79.00';
+                    if (compPrice) compPrice.innerHTML = '<strong>£49</strong> <br><small>(Promotional price, all-inclusive)</small>';
+                }
+            } catch (e) {
+                console.error("Pricing localization failed:", e);
             }
         });
     </script>

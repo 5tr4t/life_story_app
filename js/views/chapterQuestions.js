@@ -43,23 +43,23 @@ function renderChapterQuestions(navigateTo, state) {
 
     const isLastQuestion = currentQuestionNum >= chapter.questions.length;
 
-    // Instructional Overlay HTML
     const overlay = `
-        <div id="collab-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; color: white; padding: 2rem; overflow-y: auto;">
-            <div style="max-width: 500px; margin: 2rem auto; text-align: center; background: #1e293b; padding: 3rem; border-radius: 24px; border: 1px solid #334155;">
-                <div style="font-size: 4rem; margin-bottom: 2rem;">🎙️</div>
-                <h2 style="font-size: 2rem; margin-bottom: 1.5rem; font-family: 'Outfit', sans-serif;">Collaborative Mode</h2>
-                <p style="font-size: 1.125rem; line-height: 1.6; color: #94a3b8; margin-bottom: 2.5rem;">
-                    To record your guests, we need to capture your system audio. 
-                    <br><br>
-                    <strong>IMPORTANT:</strong> In the next window, please:
-                    <ul style="text-align: left; margin: 1.5rem 0; padding-left: 1.5rem;">
-                        <li style="margin-bottom: 0.75rem;">Select the <strong>Google Meet Tab</strong></li>
-                        <li>Check the <strong>"Also share tab audio"</strong> box at the bottom</li>
-                    </ul>
+        <div id="collab-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; padding: 2rem; overflow-y: auto;">
+            <div class="card" style="max-width: 500px; margin: 4rem auto; text-align: left; box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
+                <div style="text-align: center; font-size: 3.5rem; margin-bottom: 1rem;">🎙️</div>
+                <h2 style="text-align: center; font-size: 1.75rem; margin-bottom: 1.5rem; font-family: var(--font-serif);">Collaborative Mode</h2>
+                <p style="color: var(--color-text-muted); margin-bottom: 2rem; text-align: center; line-height: 1.6;">
+                    To record your guests, we need to capture your system audio. Please follow these 3 simple steps:
                 </p>
-                <button id="startCollabBtn" class="btn btn-accent" style="width: 100%; height: 60px; font-size: 1.25rem;">Got it, let's go!</button>
-                <button id="cancelCollabBtn" class="btn" style="margin-top: 1rem; color: #94a3b8;">Maybe later</button>
+                <ol style="margin-bottom: 2.5rem; padding-left: 1.5rem; color: var(--color-text-main); line-height: 1.8;">
+                    <li style="margin-bottom: 1rem;"><strong>Share system audio:</strong> In the next popup, select "Entire Screen" or "System Audio" (depending on your browser) and click Share.</li>
+                    <li style="margin-bottom: 1rem;"><strong>Start your call:</strong> Launch Google Meet and get your guests on the line.</li>
+                    <li><strong>Return here:</strong> Come back to this tab and hit the Record button.</li>
+                </ol>
+                <div style="text-align: center; display: flex; flex-direction: column; gap: 1rem;">
+                    <button id="startCollabBtn" class="btn btn-primary" style="width: 100%; height: 50px; font-size: 1.1rem;">1. Share System Audio</button>
+                    <button id="cancelCollabBtn" class="btn btn-outline" style="width: 100%; border: none;">Maybe later</button>
+                </div>
             </div>
         </div>
     `;
@@ -303,8 +303,13 @@ function renderChapterQuestions(navigateTo, state) {
             soloModeBtn.classList.remove('active-mode');
             groupModeBtn.classList.add('active-mode');
 
-            // Open Meet in new tab
-            window.open('https://meet.google.com/new', '_blank');
+            // Guide user to Step 2: Highlight Launch Meet button instead of auto-opening
+            if (launchMeetBtn) {
+                launchMeetBtn.classList.remove('btn-outline');
+                launchMeetBtn.classList.add('btn-accent');
+                launchMeetBtn.style.boxShadow = '0 0 15px var(--color-accent)';
+                launchMeetBtn.style.border = 'none';
+            }
         } catch (err) {
             alert(err.message);
             soloModeBtn.click();
@@ -318,6 +323,8 @@ function renderChapterQuestions(navigateTo, state) {
 
     launchMeetBtn.onclick = () => {
         window.open('https://meet.google.com/new', '_blank');
+        // Remove highlight once clicked
+        launchMeetBtn.style.boxShadow = 'none';
     };
 
     function showRecordedState() {
