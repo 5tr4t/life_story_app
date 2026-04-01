@@ -215,8 +215,10 @@ function renderWritingStyle(navigateTo, state) {
                 // 2. Submit Pending Feedback if it exists
                 if (state.pendingDraftFeedback) {
                     submitStatus.textContent = 'Step 2: Sending Chapter feedback with new style...';
-                    const { chapterNumber, feedback } = state.pendingDraftFeedback;
+                    const { chapterNumber, feedback, version } = state.pendingDraftFeedback;
                     await ApiService.submitDraftFeedback(state.user.id, chapterNumber, feedback, state.user.memoirName);
+                    if (!state.submittedFeedback) state.submittedFeedback = {};
+                    state.submittedFeedback[chapterNumber] = version || '1';
                     state.pendingDraftFeedback = null;
                 }
 

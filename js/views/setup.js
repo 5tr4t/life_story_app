@@ -13,11 +13,14 @@ function renderSetup(navigateTo, state) {
 
         <main class="container" style="padding-top: 3rem; max-width: 800px;">
             <div id="setupLoading" class="card" style="display: none; text-align: center; padding: 6rem 2rem;">
-                <div style="font-size: 3rem; margin-bottom: 1.5rem; animation: spin 2s linear infinite;">⏳</div>
+                <div class="loading-spinner" style="width: 60px; height: 60px; border: 4px solid #f3f3f3; border-top: 4px solid var(--color-primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1.5rem auto;"></div>
                 <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">Setting up your journey...</h2>
                 <p style="color: var(--color-text-muted); font-size: 1.1rem; max-width: 500px; margin: 0 auto;">
                     Please give us a moment while we set up the rest of your journey as per your preferences.
                 </p>
+                <style>
+                    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+                </style>
             </div>
 
             <div id="setupContent" class="card">

@@ -79,7 +79,10 @@ function renderReviewDraft(navigateTo, state) {
                 const draftVersion = draft ? (draft.version || '1') : null;
                 const isFinal = isDraftReady && draftVersion === 'final';
 
-                const isRedrafting = isDraftReady && !isFinal && state.submittedFeedback && state.submittedFeedback[ch.chapterNumber] === draftVersion;
+                const isRedrafting = isDraftReady && !isFinal && (
+                    (state.submittedFeedback && state.submittedFeedback[ch.chapterNumber] === draftVersion) ||
+                    (state.pendingDraftFeedback && Number(state.pendingDraftFeedback.chapterNumber) === Number(ch.chapterNumber))
+                );
 
                 let badgeClass = 'badge-pending';
                 let statusLabel = 'Pending';
@@ -167,13 +170,16 @@ function renderReviewDraft(navigateTo, state) {
             });
 
         } catch (error) {
-            console.error('Failed to load TOC:', error);
+            console.error('Failed to load TOC or no drafts exist:', error);
             container.innerHTML = `
-                <div class="p-xl text-center">
-                    <h2 style="color: #ef4444;">Sync Error</h2>
-                    <p>Failed to retrieve your chapter drafts.</p>
-                    <button id="retryTOC" class="btn btn-primary" style="margin-top: 1rem;">Retry</button>
-                    <button id="backDashError" class="btn" style="margin-top: 1rem; margin-left: 0.5rem;">Back to Dashboard</button>
+                <div class="p-xl text-center" style="margin-top: 4rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">✍️</div>
+                    <h2 style="font-size: 2rem; margin-bottom: 1rem;">Your Drafts are in Progress</h2>
+                    <p style="color: var(--color-text-muted); font-size: 1.1rem; max-width: 400px; margin: 0 auto 2rem auto; line-height: 1.6;">
+                        We are currently weaving your answers into beautifully written chapters. Please check back later.
+                    </p>
+                    <button id="backDashError" class="btn btn-primary" style="padding: 0.75rem 2rem;">Back to Dashboard</button>
+                    <button id="retryTOC" class="btn" style="margin-left: 1rem;">Refresh</button>
                 </div>
             `;
             container.querySelector('#retryTOC').addEventListener('click', () => render());
@@ -188,7 +194,10 @@ function renderReviewDraft(navigateTo, state) {
         const chapterNum = selectedChapter.chapter_number || selectedChapter.chapterNumber;
         const draftVersion = selectedChapter.version || '1';
         const isFinal = draftVersion === 'final';
-        const isRedrafting = !isFinal && state.submittedFeedback && state.submittedFeedback[chapterNum] === draftVersion;
+        const isRedrafting = !isFinal && (
+            (state.submittedFeedback && state.submittedFeedback[chapterNum] === draftVersion) ||
+            (state.pendingDraftFeedback && Number(state.pendingDraftFeedback.chapterNumber) === Number(chapterNum))
+        );
 
         // Process sections from content_sections
         let globalParagraphIndex = 0;
@@ -275,6 +284,8 @@ function renderReviewDraft(navigateTo, state) {
             const allFeedbackItems = container.querySelectorAll('.feedback-item');
             const textareas = container.querySelectorAll('.feedback-textarea');
 
+            const feedbackMap = {};
+
             textareas.forEach(ta => {
                 ta.addEventListener('input', (e) => {
                     feedbackMap[e.target.dataset.pIndex] = e.target.value;
@@ -314,9 +325,10 @@ function renderReviewDraft(navigateTo, state) {
 
                 // SPECIAL LOGIC FOR CHAPTER 1: If style not set, pause and redirect
                 // Use Number() to handle cases where chapterNum might be a string "1"
-                if (Number(chapterNum) === 1 && !state.writingStyleSet) {
+                if (Number(chapterNum) === 1 && String(draftVersion) === '1' && !state.writingStyleSet) {
                     state.pendingDraftFeedback = {
                         chapterNumber: chapterNum,
+                        version: draftVersion,
                         feedback: feedbackList
                     };
                     saveAppState();

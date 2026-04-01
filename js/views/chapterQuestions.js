@@ -492,11 +492,47 @@ function renderChapterQuestions(navigateTo, state) {
     }
 
     async function performSync(nextStage) {
+        const prevRecordDisplay = recordBtn ? recordBtn.style.display : 'none';
+        const prevRerecordDisplay = rerecordBtn ? rerecordBtn.style.display : 'none';
+        const prevTimerDisplay = timerElem ? timerElem.style.display : 'none';
+        const prevHintDisplay = hintElem ? hintElem.style.display : 'none';
+
+        function showProcessing() {
+            if (recordBtn) recordBtn.style.display = 'none';
+            if (rerecordBtn) rerecordBtn.style.display = 'none';
+            if (timerElem) timerElem.style.display = 'none';
+            if (hintElem) hintElem.style.display = 'none';
+            
+            saveStatus.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; color: var(--color-primary); font-weight: 500; font-size: 1.1rem;">
+                    <div class="loading-spinner" style="width: 24px; height: 24px; border: 3px solid #e2e8f0; border-top: 3px solid var(--color-primary); border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                    <span id="processingText">Processing... Please wait</span>
+                </div>
+                <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+            `;
+            saveStatus.style.display = 'block';
+        }
+
+        function updateProcessingText(text) {
+            const span = saveStatus.querySelector('#processingText');
+            if (span) span.textContent = text;
+            else saveStatus.textContent = text;
+        }
+
+        function restoreUI() {
+            if (recordBtn) recordBtn.style.display = prevRecordDisplay;
+            if (rerecordBtn) rerecordBtn.style.display = prevRerecordDisplay;
+            if (timerElem) timerElem.style.display = prevTimerDisplay;
+            if (hintElem) hintElem.style.display = prevHintDisplay;
+        }
+
         try {
-            saveStatus.textContent = 'Uploading your story...';
+            showProcessing();
+            updateProcessingText('Uploading your story...');
 
             if (!currentBlob) {
                 saveStatus.textContent = '⚠ No recording found';
+                restoreUI();
                 return false;
             }
 
@@ -507,24 +543,27 @@ function renderChapterQuestions(navigateTo, state) {
             if (currentBlob.size < 2000) {
                 saveStatus.textContent = '⚠ Recording too short/empty';
                 alert("The recording seems too short. Please try again.");
+                restoreUI();
                 return false;
             }
 
             if (avgVol < 1) {
-                saveStatus.textContent = '⚠ Very low volume detected';
+                updateProcessingText('⚠ Very low volume detected');
                 if (!confirm(`We detected very low volume (${avgVol.toFixed(1)}). This might result in a poor transcription. Save anyway?`)) {
+                    restoreUI();
                     return false;
                 }
+                showProcessing(); // Re-show spinner if they confirmed
             }
 
             // 1. Upload audio
             const currentStage = `3.${chapterNum}.${currentQuestionNum}`;
             const fileName = `${state.user.id.toLowerCase()}_ch${chapterNum}_q${currentQuestionNum}_${Date.now()}.webm`;
 
-            saveStatus.textContent = 'Uploading recording...';
+            updateProcessingText('Uploading recording...');
             try {
                 const uploadResult = await ApiService.uploadLargeAudio(state.user.id, fileName, currentStage, currentBlob, (percent) => {
-                    saveStatus.textContent = `Uploading: ${percent}%`;
+                    updateProcessingText(`Uploading: ${percent}%`);
                 });
 
                 console.log('Upload completed:', uploadResult);
@@ -533,20 +572,22 @@ function renderChapterQuestions(navigateTo, state) {
                 if (uploadResult && uploadResult.status === 'failed') {
                     saveStatus.textContent = '⚠ Backend validation failed';
                     alert(`We couldn't capture that correctly: ${uploadResult.message || "Quality check failed"}\n\nPlease try re-recording your answer for this question.`);
+                    restoreUI();
                     return false;
                 }
             } catch (err) {
                 console.error('Upload failed:', err);
                 saveStatus.textContent = '⚠ Upload failed';
                 alert(`We couldn't capture that correctly: ${err.message || "Connection error"}\n\nPlease try re-recording your answer for this question.`);
+                restoreUI();
                 return false;
             }
 
             // 2. Sync stage
-            saveStatus.textContent = 'Syncing progress...';
+            updateProcessingText('Syncing progress...');
             await ApiService.saveProgress(state.user.id, nextStage);
             state.current_stage = nextStage;
-            saveStatus.textContent = '✓ Saved Successfully';
+            updateProcessingText('✓ Saved Successfully');
 
             // 3. Cleanup: Delete local recording once synced to server
             await window.AudioStorage.deleteRecording(recordingKey);
@@ -555,6 +596,7 @@ function renderChapterQuestions(navigateTo, state) {
             return true;
         } catch (err) {
             saveStatus.textContent = '⚠ Upload failed - please try again';
+            restoreUI();
             return false;
         }
     }
