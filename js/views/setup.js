@@ -20,6 +20,12 @@ function renderSetup(navigateTo, state) {
                 </p>
                 <style>
                     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+                    @keyframes setup-pulse { 0%, 100% { height: 10px; } 50% { height: 20px; } }
+                    .setup-waveform-bar { width: 4px; background: #ef4444; border-radius: 2px; height: 10px; animation: setup-pulse 0.6s infinite ease-in-out; }
+                    .setup-waveform-bar:nth-child(2) { animation-delay: 0.1s; }
+                    .setup-waveform-bar:nth-child(3) { animation-delay: 0.2s; }
+                    .setup-waveform-bar:nth-child(4) { animation-delay: 0.3s; }
+                    .setup-waveform-bar:nth-child(5) { animation-delay: 0.4s; }
                 </style>
             </div>
 
@@ -285,6 +291,150 @@ function renderSetup(navigateTo, state) {
     const dobInput = container.querySelector('input[name="dob"]');
     const decadesInputs = container.querySelector('#decadesInputs');
 
+    // Transcription UI Helper
+    function attachTranscriptionUI(textareaEl) {
+        if (!textareaEl || textareaEl.dataset.hasTranscriptionUI) return;
+        textareaEl.dataset.hasTranscriptionUI = 'true';
+
+        const wrapper = document.createElement('div');
+        wrapper.style.position = 'relative';
+        textareaEl.parentNode.insertBefore(wrapper, textareaEl);
+        wrapper.appendChild(textareaEl);
+
+        textareaEl.style.borderBottomLeftRadius = '0';
+        textareaEl.style.borderBottomRightRadius = '0';
+
+        const controls = document.createElement('div');
+        controls.className = 'transcription-controls';
+        controls.style = "display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 1rem; background: #f8fafc; border: 1px solid var(--color-border); border-top: none; border-radius: 0 0 12px 12px;";
+        
+        controls.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <button type="button" class="btn transcribe-btn" style="border-radius: 50%; width: 44px; height: 44px; background: white; border: 1px solid var(--color-border); box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; padding: 0; color: var(--color-primary); transition: all 0.2s;">
+                    <div class="mic-icon-svg">
+                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 20px; height: 20px;">
+                            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                            <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                        </svg>
+                    </div>
+                    <div class="stop-icon-svg" style="display: none; color: #ef4444;">
+                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 20px; height: 20px;"><rect x="6" y="6" width="12" height="12" rx="1.5" /></svg>
+                    </div>
+                </button>
+                <div class="waveform-container" style="display: none; align-items: center; gap: 3px; height: 20px;">
+                    <div class="setup-waveform-bar"></div><div class="setup-waveform-bar"></div><div class="setup-waveform-bar"></div><div class="setup-waveform-bar"></div><div class="setup-waveform-bar"></div>
+                </div>
+                <span class="timer" style="font-family: monospace; font-size: 1rem; font-weight: bold; color: var(--color-primary); display: none;">00:00</span>
+                <span class="recording-status-text" style="color: #ef4444; font-size: 0.85rem; font-weight: 600; display: none;">● RECORDING</span>
+            </div>
+            <div class="transcribeStatus" style="font-size: 0.85rem; color: var(--color-accent); font-weight: 600; display: none;">Transcribing...</div>
+        `;
+        wrapper.appendChild(controls);
+
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let startTime = null;
+        let timerInterval = null;
+
+        const recordBtn = controls.querySelector('.transcribe-btn');
+        const micIconSvg = controls.querySelector('.mic-icon-svg');
+        const stopIconSvg = controls.querySelector('.stop-icon-svg');
+        const waveformContainer = controls.querySelector('.waveform-container');
+        const timerElem = controls.querySelector('.timer');
+        const recordingStatusText = controls.querySelector('.recording-status-text');
+        const transcribeStatus = controls.querySelector('.transcribeStatus');
+
+        function startTimer() {
+            startTime = Date.now();
+            timerInterval = setInterval(() => {
+                const delta = Date.now() - startTime;
+                const minutes = Math.floor(delta / 60000).toString().padStart(2, '0');
+                const seconds = Math.floor((delta % 60000) / 1000).toString().padStart(2, '0');
+                timerElem.textContent = `${minutes}:${seconds}`;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            startTime = null;
+        }
+
+        recordBtn.onclick = async (e) => {
+            e.preventDefault();
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                stopTimer();
+
+                waveformContainer.style.display = 'none';
+                timerElem.style.display = 'none';
+                recordingStatusText.style.display = 'none';
+                micIconSvg.style.display = 'block';
+                stopIconSvg.style.display = 'none';
+                recordBtn.style.borderColor = 'var(--color-border)';
+
+                textareaEl.placeholder = "Transcribing your voice... please wait.";
+                transcribeStatus.style.display = 'block';
+
+                if (window.AudioManager && window.AudioManager.stopVolumeMonitor) {
+                    window.AudioManager.stopVolumeMonitor();
+                }
+                return;
+            }
+
+            try {
+                const stream = await window.AudioManager.initSoloMode();
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = event => audioChunks.push(event.data);
+                mediaRecorder.onstop = async () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const reader = new FileReader();
+                    reader.readAsDataURL(audioBlob);
+                    reader.onloadend = async () => {
+                        const base64Data = reader.result.split(',')[1];
+                        try {
+                            const result = await ApiService.transcribeAudio(base64Data, 'setup', 'field');
+                            const currentVal = textareaEl.value.trim();
+                            textareaEl.value = currentVal ? currentVal + ' ' + result.text : result.text;
+                            textareaEl.placeholder = "Your response...";
+                            transcribeStatus.style.display = 'none';
+                        } catch (err) {
+                            console.error("Transcription failed:", err);
+                            transcribeStatus.textContent = "⚠ Transcription failed";
+                            setTimeout(() => { transcribeStatus.style.display = 'none'; transcribeStatus.textContent = "Transcribing..."; }, 3000);
+                            textareaEl.placeholder = "Transcription failed. Please try again or type.";
+                        }
+                    };
+                };
+
+                mediaRecorder.start();
+                startTimer();
+                if (window.AudioManager && window.AudioManager.startVolumeMonitor) {
+                    window.AudioManager.startVolumeMonitor();
+                }
+
+                waveformContainer.style.display = 'flex';
+                timerElem.style.display = 'block';
+                recordingStatusText.style.display = 'block';
+                micIconSvg.style.display = 'none';
+                stopIconSvg.style.display = 'block';
+                transcribeStatus.style.display = 'none';
+                recordBtn.style.borderColor = '#ef4444';
+            } catch (err) {
+                console.error("Mic access denied:", err);
+                alert("Microphone access is required for voice transcription.");
+            }
+        };
+    }
+
+    // Attach transcription UI to static long-text elements
+    setTimeout(() => {
+        attachTranscriptionUI(container.querySelector('[name="placesLived"]'));
+        attachTranscriptionUI(boundariesText);
+        attachTranscriptionUI(container.querySelector('[name="specificMemories"]'));
+    }, 0);
+
     // Section 2: Life by the Decade Logic
     function updateDecadeInputs(dob) {
         if (!dob) return;
@@ -318,6 +468,10 @@ function renderSetup(navigateTo, state) {
                 }
             });
         }
+
+        setTimeout(() => {
+            container.querySelectorAll('.decade-input').forEach(attachTranscriptionUI);
+        }, 0);
     }
 
     if (dobInput) {
