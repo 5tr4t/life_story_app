@@ -56,25 +56,25 @@ function renderSetup(navigateTo, state) {
                             </div>
                             <div class="input-group">
                                 <label class="input-label">Date of Birth</label>
-                                <input type="date" class="input-field" name="dob">
+                                <input type="date" class="input-field" name="dob" required>
                             </div>
                         </div>
  
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
                             <div class="input-group">
                                 <label class="input-label">Place of Birth</label>
-                                <input type="text" class="input-field" name="pob" placeholder="City, Country">
+                                <input type="text" class="input-field" name="pob" placeholder="City, Country" required>
                             </div>
                             <div class="input-group">
                                 <label class="input-label">Current Residence</label>
-                                <input type="text" class="input-field" name="residence" placeholder="City, Country">
+                                <input type="text" class="input-field" name="residence" placeholder="City, Country" required>
                             </div>
                         </div>
  
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
                             <div class="input-group">
                                 <label class="input-label">Marital Status</label>
-                                <select class="input-field" name="maritalStatus">
+                                <select class="input-field" name="maritalStatus" required>
                                     <option value="">Select...</option>
                                     <option value="single">Single</option>
                                     <option value="married">Married</option>
@@ -92,7 +92,7 @@ function renderSetup(navigateTo, state) {
                         <div class="input-group">
                             <label class="input-label">Significant Others / Key Relationships</label>
                             <p style="font-size: 0.95rem; color: var(--color-text-muted); margin-bottom: 0.5rem;">Who have been the most significant partners or companions in your life? (Spouses, friends, partners, etc.)</p>
-                            <textarea class="input-field" name="significantOthers" rows="2" placeholder="e.g., My wife Sarah, my lifelong best friend Mark..."></textarea>
+                            <textarea class="input-field" name="significantOthers" rows="2" placeholder="e.g., My wife Sarah, my lifelong best friend Mark..." required></textarea>
                         </div>
                     </div>
 
@@ -103,7 +103,7 @@ function renderSetup(navigateTo, state) {
                         <div class="input-group" style="margin-bottom: 2rem;">
                             <label class="input-label">Where have you lived?</label>
                             <p style="font-size: 0.95rem; color: var(--color-text-muted); margin-bottom: 0.5rem;">List the main cities/countries you’ve lived in, roughly in order.</p>
-                            <textarea class="input-field" name="placesLived" rows="2" placeholder="e.g., Born in London, moved to Singapore in my 20s, settled in Vancouver in my 40s."></textarea>
+                            <textarea class="input-field" name="placesLived" rows="2" placeholder="e.g., Born in London, moved to Singapore in my 20s, settled in Vancouver in my 40s." required></textarea>
                         </div>
 
                         <div id="decadesContainer">
@@ -202,8 +202,8 @@ function renderSetup(navigateTo, state) {
                             <label class="input-label" style="margin-bottom: 1rem; display: block;">
                                 Besides the main theme, are there other specific memories you definitely want to include?
                             </label>
-                            <p style="font-size: 0.95rem; color: var(--color-text-muted); margin-bottom: 0.5rem;">(e.g., "That trip to Peru in 1995" or "My grandmother's cooking")</p>
-                            <textarea class="input-field" name="specificMemories" rows="3" placeholder="List any special moments you don't want us to miss..."></textarea>
+                            <p style="font-size: 0.95rem; color: var(--color-text-muted); margin-bottom: 0.5rem;">(e.g., "That trip to Peru in 1995" or "My grandmother's cooking", or type "None")</p>
+                            <textarea class="input-field" name="specificMemories" rows="3" placeholder="List any special moments you don't want us to miss..." required></textarea>
                         </div>
                     </div>
 
@@ -321,6 +321,7 @@ function renderSetup(navigateTo, state) {
                         <svg viewBox="0 0 24 24" fill="currentColor" style="width: 20px; height: 20px;"><rect x="6" y="6" width="12" height="12" rx="1.5" /></svg>
                     </div>
                 </button>
+                <span class="click-to-record-text" style="font-size: 0.85rem; color: var(--color-text-muted);">Click to record</span>
                 <div class="waveform-container" style="display: none; align-items: center; gap: 3px; height: 20px;">
                     <div class="setup-waveform-bar"></div><div class="setup-waveform-bar"></div><div class="setup-waveform-bar"></div><div class="setup-waveform-bar"></div><div class="setup-waveform-bar"></div>
                 </div>
@@ -343,6 +344,8 @@ function renderSetup(navigateTo, state) {
         const timerElem = controls.querySelector('.timer');
         const recordingStatusText = controls.querySelector('.recording-status-text');
         const transcribeStatus = controls.querySelector('.transcribeStatus');
+
+        const clickToRecordText = controls.querySelector('.click-to-record-text');
 
         function startTimer() {
             startTime = Date.now();
@@ -371,6 +374,7 @@ function renderSetup(navigateTo, state) {
                 micIconSvg.style.display = 'block';
                 stopIconSvg.style.display = 'none';
                 recordBtn.style.borderColor = 'var(--color-border)';
+                clickToRecordText.style.display = 'inline';
 
                 textareaEl.placeholder = "Transcribing your voice... please wait.";
                 transcribeStatus.style.display = 'block';
@@ -414,6 +418,7 @@ function renderSetup(navigateTo, state) {
                     window.AudioManager.startVolumeMonitor();
                 }
 
+                clickToRecordText.style.display = 'none';
                 waveformContainer.style.display = 'flex';
                 timerElem.style.display = 'block';
                 recordingStatusText.style.display = 'block';
@@ -455,7 +460,7 @@ function renderSetup(navigateTo, state) {
         decadesInputs.innerHTML = relevantEras.map(era => `
             <div class="input-group">
                 <label class="input-label" style="color: var(--color-primary);">${era.label}</label>
-                <textarea class="input-field decade-input" name="era_${era.id}" rows="3" placeholder="${era.placeholder}"></textarea>
+                <textarea class="input-field decade-input" name="era_${era.id}" rows="3" placeholder="${era.placeholder}" required></textarea>
             </div>
         `).join('');
 
@@ -584,6 +589,28 @@ function renderSetup(navigateTo, state) {
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
+
+        const setupError = container.querySelector('#setupError');
+        setupError.style.display = 'none';
+
+        // Check checkbox validity
+        const mainThemesChecked = Array.from(container.querySelectorAll('input[name="mainThemes"]:checked'));
+        if (mainThemesChecked.length === 0) {
+            setupError.textContent = "Please select at least one main theme.";
+            setupError.style.display = 'block';
+            window.scrollTo({ top: setupError.offsetTop - 100, behavior: 'smooth' });
+            return;
+        }
+
+        // Check boundaries text validity if specific is selected
+        const boundarySpecific = container.querySelector('input[name="boundaries"][value="specific"]');
+        if (boundarySpecific && boundarySpecific.checked && (!boundariesText.value || boundariesText.value.trim() === '')) {
+            setupError.textContent = "Please specify your boundaries or topics to avoid.";
+            setupError.style.display = 'block';
+            boundariesText.focus();
+            window.scrollTo({ top: setupError.offsetTop - 100, behavior: 'smooth' });
+            return;
+        }
 
         // Collect Data
         const formData = new FormData(form);
