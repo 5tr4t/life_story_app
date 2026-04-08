@@ -168,7 +168,10 @@
 
             // Report the transaction ID to Google Ads to prevent duplicate conversions
             if (typeof gtag === 'function') {
-                gtag('event', 'purchase', {
+                gtag('event', 'conversion', {
+                    'send_to': 'AW-18070719514/qiScCKCW9JccEJqY5ahD',
+                    'value': 59.00,
+                    'currency': 'USD',
                     'transaction_id': sessionId
                 });
             }
