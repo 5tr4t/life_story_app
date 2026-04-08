@@ -166,6 +166,13 @@
                 return;
             }
 
+            // Report the transaction ID to Google Ads to prevent duplicate conversions
+            if (typeof gtag === 'function') {
+                gtag('event', 'purchase', {
+                    'transaction_id': sessionId
+                });
+            }
+
             try {
                 // Using GET with query parameters to minimize CORS preflight issues
                 const fetchUrl = `${n8nWebhookUrl}?stripe_session_id=${encodeURIComponent(sessionId)}`;
