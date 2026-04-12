@@ -941,6 +941,10 @@ section {
         padding: 0.8rem 5%;
     }
 
+    .logo-small {
+        font-size: 1.1rem;
+    }
+
     .mobile-menu-toggle {
         display: block;
     }
