@@ -275,12 +275,13 @@ section {
 
 /* Section 1: Hero Split */
 .hero-split {
-    min-height: 90vh;
+    min-height: auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 4rem;
     padding-top: 12vh;
+    padding-bottom: 2rem;
     max-width: 1400px;
     margin: 0 auto;
 }
@@ -314,14 +315,14 @@ section {
 
 .hero-image-content {
     flex: 1.2;
-    height: 70vh;
-    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .image-hero {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
     border-radius: 12px;
 }
 
@@ -349,7 +350,7 @@ section {
     gap: 2rem;
     justify-content: center;
     flex-wrap: nowrap;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
     /* Add subtle internal padding so polaroids can "tilt" without clipping */
     padding: 1rem;
 }
@@ -408,15 +409,22 @@ section {
 
 .split-img-large {
     width: 100%;
-    aspect-ratio: 4/5;
-    object-fit: cover;
+    height: auto;
     border-radius: 12px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
 }
 
 /* Section 4: Process */
 .process-section {
+    background-color: var(--color-bg);
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.homework-section {
     background-color: var(--color-surface);
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
 }
 
 .process-header {
@@ -426,7 +434,7 @@ section {
 .process-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 4rem;
+    gap: 2rem;
     justify-content: center;
     text-align: center;
 }
@@ -498,7 +506,7 @@ section {
     font-size: 1.8rem;
     font-family: var(--font-serif);
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
 }
 
 .flow-timeline {
@@ -575,7 +583,7 @@ section {
 .pricing-section {
     position: relative;
     background-color: var(--color-surface-dark);
-    padding: 5rem 5%;
+    padding: 3rem 5%;
 }
 
 .pricing-container {
@@ -586,8 +594,8 @@ section {
 .pricing-card {
     background-color: white;
     border-radius: 16px;
-    padding: 3.5rem;
-    margin-top: 3rem;
+    padding: 2.5rem;
+    margin-top: 2rem;
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
     position: relative;
     z-index: 10;
@@ -687,7 +695,7 @@ section {
 
 .card-checklist {
     list-style: none;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
 }
 
 .card-checklist li {
@@ -727,7 +735,7 @@ section {
 }
 
 .mb-5 {
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
 }
 
 .faq-accordion {
@@ -903,7 +911,6 @@ section {
 
     .hero-image-content {
         width: 100%;
-        min-height: 400px;
     }
 
     .process-grid {
@@ -1027,7 +1034,7 @@ section {
     -webkit-overflow-scrolling: touch;
     box-shadow: 0 10px 40px rgba(0,0,0,0.06);
     border-radius: 12px;
-    margin-top: 3rem;
+    margin-top: 2rem;
     padding-bottom: 1rem;
 }
 
@@ -1090,4 +1097,158 @@ section {
     font-size: 1.05rem;
     padding-top: 1.25rem;
     padding-bottom: 1.25rem;
+}
+
+.comparison-section {
+    background-color: var(--color-surface);
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}
+
+.keepsake-section {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.keepsake-section .image-text-layout {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+/* Section: Testimonials */
+.testimonials-section {
+    background-color: var(--color-surface);
+    padding: 2rem 5%;
+}
+
+.testimonial-carousel {
+    display: flex;
+    gap: 2rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 1rem 0;
+    -webkit-overflow-scrolling: touch;
+    /* Hide scrollbar */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.testimonial-carousel::-webkit-scrollbar {
+    display: none;
+}
+
+.testimonial-card {
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+    background: white;
+    padding: 3rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.testimonial-quote {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: var(--color-text-main);
+    margin-bottom: 1.5rem;
+    font-style: italic;
+}
+
+.testimonial-author {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    color: var(--color-accent);
+    font-size: 1rem;
+}
+
+@media (min-width: 769px) {
+    .testimonial-card {
+        flex: 0 0 calc(100% / 1.5);
+    }
+}
+
+@media (min-width: 1024px) {
+    .testimonial-card {
+        flex: 0 0 calc(100% / 2.5);
+    }
+}
+
+/* Section: Founder Story */
+.founder-section {
+    background-color: var(--color-bg); /* Matches Hero background */
+    padding: 3rem 5%;
+    text-align: center;
+}
+
+.founder-container {
+    max-width: 750px;
+    margin: 0 auto;
+}
+
+.founder-content {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    text-align: left;
+    margin-top: 2rem;
+}
+
+.founder-text {
+    flex: 1;
+}
+
+.founder-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    background-color: white; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.founder-avatar img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.founder-quote {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: var(--color-text-main);
+    margin-bottom: 1rem;
+    font-style: italic;
+}
+
+.founder-signature {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--color-accent);
+}
+
+@media (max-width: 768px) {
+    .founder-content {
+        flex-direction: column; /* Keep avatar below text */
+        text-align: left;
+        gap: 1rem;
+    }
+    
+    .founder-avatar {
+        margin: 0; /* Keep it left-aligned/tight with text on mobile */
+        width: 80px;
+        height: 80px;
+    }
 }

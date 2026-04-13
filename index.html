@@ -5,12 +5,12 @@
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18070719514"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-      gtag('config', 'AW-18070719514');
-      gtag('config', 'G-P55V5Q2RKB');
+        gtag('config', 'AW-18070719514');
+        gtag('config', 'G-P55V5Q2RKB');
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,20 +18,22 @@
 
     <!-- Meta Pixel Code -->
     <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '780920604885483');
-    fbq('track', 'PageView');
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '780920604885483');
+        fbq('track', 'PageView');
     </script>
     <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=780920604885483&ev=PageView&noscript=1"
-    /></noscript>
+            src="https://www.facebook.com/tr?id=780920604885483&ev=PageView&noscript=1" /></noscript>
     <!-- End Meta Pixel Code -->
 
     <!-- Fonts for elegant modern-classic feel -->
@@ -53,13 +55,14 @@
     <!-- Global Header -->
     <header class="site-header reveal-on-scroll">
         <div class="header-container">
-            <div class="logo">FondMemoirs</div>
+            <a href="index.html" class="logo">FondMemoirs</a>
             <button class="mobile-menu-toggle" aria-label="Toggle Menu">
                 <i data-feather="menu"></i>
             </button>
             <nav class="nav-links">
                 <a href="#how-it-works" class="nav-link">How it Works</a>
                 <a href="#the-keepsake" class="nav-link">The Keepsake</a>
+                <a href="#faqs" class="nav-link">FAQs</a>
                 <a href="app.html" class="nav-link">Sign In</a>
             </nav>
         </div>
@@ -68,7 +71,7 @@
     <!-- Sticky Header CTA (Hidden by default, shown on scroll) -->
     <div class="sticky-cta-bar" id="sticky-cta">
         <div class="sticky-container">
-            <div class="logo logo-small">FondMemoirs</div>
+            <a href="index.html" class="logo logo-small">FondMemoirs</a>
             <button class="mobile-menu-toggle" aria-label="Toggle Menu">
                 <i data-feather="menu"></i>
             </button>
@@ -80,74 +83,31 @@
     <section class="hero-split">
         <div class="hero-text-content">
             <span class="eyebrow reveal-delay-1">"Every lifetime is a masterpiece of memories."</span>
-            <h1 class="hero-headline reveal-delay-2">Your Life’s Journey,<br>Beautifully Captured.</h1>
-            <p class="hero-subheadline reveal-delay-3">Meet your personal digital scribe. A seamless, guided experience
-                that turns your memories, or the memories of someone you love, into a timeless written memoir.</p>
+            <h1 class="hero-headline reveal-delay-2">Turn Memories into a Memoir. No Writing Required.</h1>
+            <p class="hero-subheadline reveal-delay-3" style="margin-bottom: 0.5rem;">The perfect Mother's Day gift is a
+                shared experience. Sit together, answer our AI interviewer's thoughtful questions, and let us weave her
+                stories into a beautiful printed memoir.</p>
+            <p class="hero-promo-price reveal-delay-3" id="hero-promo-price"
+                style="color: var(--color-accent); font-weight: 600; font-size: 1.15rem; margin-bottom: 1.5rem;">
+                Promotional Price: $59 all inclusive.</p>
             <div class="hero-actions reveal-delay-4">
                 <a href="#checkout" class="btn btn-primary">Start the Journey Now</a>
             </div>
         </div>
         <div class="hero-image-content reveal-delay-5">
             <!-- Replace the src below with the actual image of Mother & Daughter -->
-            <img src="images/Mother daughter.png" alt="Mother and Daughter looking at photo album" class="image-hero">
+            <img src="images/Website Hero.jpg" alt="Mother and Daughter looking at photo album" class="image-hero">
         </div>
     </section>
 
-    <!-- Section 2: The Chapters That Made You -->
-    <section class="chapters-showreel">
-        <div class="showreel-container">
-            <div class="showreel-text text-center reveal-on-scroll">
-                <h2 class="section-title">The Chapters That Made You.</h2>
-                <p class="section-desc centered-desc">This is your chance to document your adventures, your life
-                    lessons, and your
-                    personal growth in your own voice. Build a lasting, authentic legacy that your family will
-                    treasure for generations, entirely at your own pace.</p>
-            </div>
-
-            <div class="polaroid-grid reveal-on-scroll">
-                <!-- Replace the src attributes below with your chronological photos -->
-                <div class="polaroid delay-1">
-                    <img src="images/Little boy.PNG" alt="Young boy playing" class="polaroid-img">
-                </div>
-                <div class="polaroid delay-2">
-                    <img src="images/Young man - first job.PNG" alt="First day of work" class="polaroid-img">
-                </div>
-                <div class="polaroid delay-3">
-                    <img src="images/Wedding.PNG" alt="Joyful wedding day" class="polaroid-img">
-                </div>
-                <div class="polaroid delay-4">
-                    <img src="images/Family holiday.PNG" alt="Family holiday" class="polaroid-img">
-                </div>
-                <div class="polaroid delay-5">
-                    <img src="images/Family studio.PNG" alt="Present day senior portrait" class="polaroid-img">
-                </div>
-            </div>
-
-            <div class="text-center reveal-on-scroll delay-6 mt-4">
-                <a href="#checkout" class="btn btn-primary">Start the Journey Now</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 3: Discover Who They Were -->
-    <section class="discover-section">
-        <div class="image-text-layout container">
-            <div class="layout-image reveal-on-scroll">
-                <!-- Replace the src below with the image of older/younger hands -->
-                <img src="images/Conversation.PNG" alt="A father and daughter having a conversation"
-                    class="split-img-large">
-            </div>
-            <div class="layout-text reveal-on-scroll delay-2">
-                <h2 class="section-title">Discover Who They Were Before They Were "Yours."</h2>
-                <p class="section-desc">The greatest gift you can give a loved one is your time. Sit down together and
-                    let our guided scribe spark the conversation. Learn about the vibrant person they were in their
-                    youth, hear stories you never knew existed, and deepen your bond through shared storytelling.</p>
-                <ul class="card-checklist discover-checklist mt-3">
-                    <li><i data-feather="heart"></i> Spend uninterrupted quality time together</li>
-                    <li><i data-feather="users"></i> Invite family and friends to contribute memories</li>
-                    <li><i data-feather="camera"></i> Relive your favorite moments and milestones</li>
-                </ul>
-            </div>
+    <!-- Section 2: Don't Give Mom Homework -->
+    <section class="homework-section text-center reveal-on-scroll">
+        <div class="container margin-auto" style="max-width: 800px;">
+            <h2 class="section-title">Don't Give Mom a Year-Long Homework Assignment</h2>
+            <p class="section-desc centered-desc mb-4">Other memoir services send weekly emails for 52 weeks, forcing
+                your loved ones to type out answers. Most people abandon them halfway.</p>
+            <p class="section-desc centered-desc">FondMemoirs is different. It is a conversation. Recorded solo or as an
+                interview where you can participate and share the experience.</p>
         </div>
     </section>
 
@@ -155,36 +115,33 @@
     <section id="how-it-works" class="process-section">
         <div class="container margin-auto text-center">
             <div class="process-header reveal-on-scroll">
-                <h2 class="section-title">No Blank Pages. Just Conversations.</h2>
-                <p class="section-desc centered-desc">Writing a book is daunting. Talking about your life is natural.
-                    Our intelligent digital scribe acts as your personal biographer, walking you through your life
-                    without the pressure of a blank page.</p>
+                <h2 class="section-title">From Conversation to Keepsake in 3 Steps</h2>
             </div>
 
             <div class="process-grid">
                 <div class="process-step reveal-on-scroll delay-1">
                     <div class="step-icon">
-                        <i data-feather="message-circle"></i>
+                        <i data-feather="mic"></i>
                     </div>
-                    <h3 class="step-title">Guided Discovery</h3>
-                    <p class="step-desc">Our intuitive guide asks thoughtful, personalized questions to spark your best
-                        memories, decade by decade. You speak and we record.</p>
+                    <h3 class="step-title">1. The Interview</h3>
+                    <p class="step-desc">Log in on any device. Our AI guide asks personalized, decade-by-decade
+                        questions to spark incredible memories.</p>
                 </div>
                 <div class="process-step reveal-on-scroll delay-2">
                     <div class="step-icon">
-                        <i data-feather="clock"></i>
+                        <i data-feather="edit-3"></i>
                     </div>
-                    <h3 class="step-title">At Your Own Pace</h3>
-                    <p class="step-desc">There is no rush. Transform a series of relaxed, meaningful sessions into a
-                        complete FondMemoirs book, saving your progress as you go.</p>
+                    <h3 class="step-title">2. The Ghostwriter</h3>
+                    <p class="step-desc">Our system weaves the spoken transcripts into beautifully written, polished
+                        chapters in the chosen voice and style. Review and refine drafts as needed.</p>
                 </div>
                 <div class="process-step reveal-on-scroll delay-3">
                     <div class="step-icon">
-                        <i data-feather="edit-2"></i>
+                        <i data-feather="book-open"></i>
                     </div>
-                    <h3 class="step-title">Your Exact Voice</h3>
-                    <p class="step-desc">You answer naturally, and the scribe weaves your words into beautifully crafted
-                        chapters that sound exactly like you.</p>
+                    <h3 class="step-title">3. The Heirloom</h3>
+                    <p class="step-desc">Approve the final draft, add cover details and we print and ship a premium
+                        ~200-page hardcover book right to their door.</p>
                 </div>
             </div>
 
@@ -249,70 +206,62 @@
         </div>
     </section>
 
-    <!-- Section 4.5: How We Compare -->
+    <!-- Section 4.5: Why Families Choose Fond Memoirs -->
     <section id="comparison" class="comparison-section reveal-on-scroll">
         <div class="container margin-auto text-center" style="max-width: 1000px;">
             <div class="process-header reveal-on-scroll">
-                <h2 class="section-title">How We Compare</h2>
-                <p class="section-desc centered-desc">We have significantly enhanced what others are currently providing
-                    to offer you a premium, enjoyable experience. You get a memoir, not a collection of stories.</p>
+                <h2 class="section-title">Why Families Choose Fond Memoirs</h2>
             </div>
 
-            <div class="comparison-table-wrapper reveal-on-scroll delay-1">
-                <table class="comparison-table">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th class="highlight">FondMemoirs</th>
-                            <th>Traditional memoirs</th>
-                            <th>Story writers</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="feature-label">Writing Method</td>
-                            <td class="highlight">Bespoke memoir written for you based on conversational input</td>
-                            <td>Bespoke ghostwriting based on interviews</td>
-                            <td>User writes or dictates answers to weekly prompts</td>
-                        </tr>
-                        <tr>
-                            <td class="feature-label">Story Arc & Structure</td>
-                            <td class="highlight">Fully custom storyline for you. No templates</td>
-                            <td>Custom structure based on hours of interviews</td>
-                            <td>Templated questions or 52-week structure</td>
-                        </tr>
-                        <tr>
-                            <td class="feature-label">Editing Provided</td>
-                            <td class="highlight">Fully flexible in your preferred style</td>
-                            <td>Professional ghostwriting and editing</td>
-                            <td>Basic editing/autocorrect or AI editing</td>
-                        </tr>
-                        <tr>
-                            <td class="feature-label">Timeline</td>
-                            <td class="highlight">A few sittings - at your pace</td>
-                            <td>Several months depending on the package</td>
-                            <td>1 year (one prompt per week)</td>
-                        </tr>
-                        <tr>
-                            <td class="feature-label">Review Process</td>
-                            <td class="highlight">Read, review, and provide feedback as you go</td>
-                            <td>Review stages during the project</td>
-                            <td>Review layout at the end of the year before printing</td>
-                        </tr>
-                        <tr>
-                            <td class="feature-label">Pricing Model</td>
-                            <td class="highlight">One-time fee (no subscription)</td>
-                            <td>One-time fee (payable in installments)</td>
-                            <td>Annual subscription or One-time fee</td>
-                        </tr>
-                        <tr class="price-row">
-                            <td class="feature-label">Price</td>
-                            <td class="highlight" id="comparison-promo-price"><strong>$59</strong> <br><small>(Promotional price, all-inclusive)</small></td>
-                            <td>Starts at $3,000</td>
-                            <td>$59 - $99</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="cards-layout reveal-on-scroll delay-1"
+                style="display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin-top: 3rem; text-align: left;">
+                <div class="card highlight-card"
+                    style="flex: 1; min-width: 300px; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 15px 35px rgba(194, 154, 98, 0.15); border-top: 4px solid var(--color-accent);">
+                    <h3 class="card-title" style="margin-bottom: 1rem; color: var(--color-accent); font-size: 1.2rem;">
+                        Fond Memoirs:</h3>
+                    <ul class="card-checklist" style="margin-bottom: 0;">
+                        <li style="margin-bottom: 0.5rem; font-size: 1rem;"><span
+                                style="font-size: 1.1rem; min-width: 24px; display: inline-block;">✅</span> Speak your
+                            memories (no typing)</li>
+                        <li style="margin-bottom: 0.5rem; font-size: 1rem;"><span
+                                style="font-size: 1.1rem; min-width: 24px; display: inline-block;">✅</span> We do the
+                            writing</li>
+                        <li style="margin-bottom: 0.5rem; font-size: 1rem;"><span
+                                style="font-size: 1.1rem; min-width: 24px; display: inline-block;">✅</span> Finished in
+                            a few relaxed sittings</li>
+                        <li style="margin-bottom: 0.5rem; font-size: 1rem;"><span
+                                style="font-size: 1.1rem; min-width: 24px; display: inline-block;">✅</span> A bonding
+                            experience to share together</li>
+                        <li style="margin-bottom: 0; font-size: 1rem;"><span
+                                style="font-size: 1.1rem; min-width: 24px; display: inline-block;">✅</span> <strong
+                                id="card-promo-price">$59</strong> flat fee
+                            (hardcover included)</li>
+                    </ul>
+                </div>
+
+                <div class="card competitor-card"
+                    style="flex: 1; min-width: 300px; background: #fffcfc; padding: 2rem; border-radius: 12px; border: 1px solid #ffebeb; opacity: 0.9;">
+                    <h3 class="card-title"
+                        style="margin-bottom: 1rem; color: #E03C31; font-size: 1.2rem; letter-spacing: normal;">
+                        Competitors:</h3>
+                    <ul class="card-checklist" style="margin-bottom: 0;">
+                        <li style="margin-bottom: 0.5rem; font-size: 1rem;"><span
+                                style="font-size: 1.1rem; min-width: 24px; display: inline-block;">❌</span> Type out
+                            long essays on a keyboard</li>
+                        <li style="margin-bottom: 0.5rem; font-size: 1rem;"><span
+                                style="font-size: 1.1rem; min-width: 24px; display: inline-block;">❌</span> You do all
+                            the writing</li>
+                        <li style="margin-bottom: 0.5rem; font-size: 1rem;"><span
+                                style="font-size: 1.1rem; min-width: 24px; display: inline-block;">❌</span> Takes a full
+                            52 weeks to finish</li>
+                        <li style="margin-bottom: 0.5rem; font-size: 1rem;"><span
+                                style="font-size: 1.1rem; min-width: 24px; display: inline-block;">❌</span> A lonely,
+                            tedious chore</li>
+                        <li style="margin-bottom: 0; font-size: 1rem;"><span
+                                style="font-size: 1.1rem; min-width: 24px; display: inline-block;">❌</span> $99+ yearly
+                            subscriptions</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </section>
@@ -321,17 +270,58 @@
     <section id="the-keepsake" class="keepsake-section">
         <div class="image-text-layout container layout-reverse">
             <div class="layout-text reveal-on-scroll">
-                <h2 class="section-title">A Life's Story, Bound in Print.</h2>
-                <p class="section-desc">A digital draft is just the beginning. Once your memories are finalized and
-                    polished, we bring them to life. You will receive one beautifully printed, professionally bound
+                <h2 class="section-title">A Premium, Hardcover Printed Copy</h2>
+                <p class="section-desc">Once your memoir is finalized, we bring it to life. You will receive one
+                    beautifully printed, professionally bound
                     hardcover copy of your memoir delivered straight to your door. Keep it for your own bookshelf, or
-                    share
-                    it as a priceless, physical heirloom.</p>
+                    share it as a priceless, physical heirloom.</p>
                 <a href="#checkout" class="btn btn-primary mt-3">Start the Journey Now</a>
             </div>
             <div class="layout-image reveal-on-scroll delay-2">
-                <!-- Replace the src below with the image of 5 printed paperbacks -->
-                <img src="images/keepsake1.png" alt="An elegant hardcover book" class="split-img-large">
+                <img src="images/book example 4_1.jpg" alt="An elegant hardcover book" class="split-img-large">
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5.5: Testimonials -->
+    <section class="testimonials-section reveal-on-scroll">
+        <div class="container margin-auto text-center">
+            <h2 class="section-title">What Our Users Are Saying</h2>
+            <p class="section-desc centered-desc">We have only just started, but received fantastic feedback from early
+                users.</p>
+
+            <div class="testimonial-carousel-wrapper reveal-on-scroll delay-1" style="position: relative;">
+                <button class="carousel-nav prev" id="testimonial-prev" aria-label="Previous testimonial"
+                    style="position: absolute; left: -2rem; top: 50%; transform: translateY(-50%); background: white; border: none; width: 40px; height: 40px; border-radius: 50%; box-shadow: 0 5px 15px rgba(0,0,0,0.1); cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; color: var(--color-accent);">
+                    <i data-feather="chevron-left"></i>
+                </button>
+
+                <div class="testimonial-carousel" id="testimonial-carousel">
+                    <!-- Quote 1 -->
+                    <div class="testimonial-card">
+                        <p class="testimonial-quote">"I thought talking to an AI would feel strange, but the questions
+                            were so incredibly thoughtful based on my life. It felt natural answering them."</p>
+                        <span class="testimonial-author">– Pam R., Early Access User</span>
+                    </div>
+                    <!-- Quote 2 -->
+                    <div class="testimonial-card">
+                        <p class="testimonial-quote">"My dad loves recounting stories, but isn't tech savvy. This worked
+                            perfectly for us, and I was amazed at the quality of the writing. It was as good as engaging
+                            a professional memoir writer."</p>
+                        <span class="testimonial-author">– Mark R., Early Access User</span>
+                    </div>
+                    <!-- Quote 3 -->
+                    <div class="testimonial-card">
+                        <p class="testimonial-quote">"Interviewing my mom and listening to her answers was the best
+                            part. I heard stories I never knew. The book is just a wonderful bonus."</p>
+                        <span class="testimonial-author">– Emily W., Early Access User</span>
+                    </div>
+                </div>
+
+                <button class="carousel-nav next" id="testimonial-next" aria-label="Next testimonial"
+                    style="position: absolute; right: -2rem; top: 50%; transform: translateY(-50%); background: white; border: none; width: 40px; height: 40px; border-radius: 50%; box-shadow: 0 5px 15px rgba(0,0,0,0.1); cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; color: var(--color-accent);">
+                    <i data-feather="chevron-right"></i>
+                </button>
             </div>
         </div>
     </section>
@@ -357,7 +347,7 @@
                 <div class="guarantee-badge mt-2 mb-4">
                     <i data-feather="shield"></i>
                     <span><strong>15-Day Money-Back Guarantee</strong><br>Try it risk-free. Cancel within 15 days for a
-                        full refund.*</span>
+                        full* refund. No questions asked.</span>
                 </div>
 
                 <ul class="card-checklist">
@@ -374,12 +364,36 @@
                     class="btn btn-primary btn-block btn-large mt-4">Buy Now</a>
             </div>
         </div>
+
+        </div>
+
+        <div class="text-center mt-4"
+            style="max-width: 600px; margin-left: auto; margin-right: auto; opacity: 0.7; color: white;">
+            <p><small>*Please note: While we offer a full refund of our service fee, we may not be able to refund the
+                    2.5%
+                    card processing fee charged by our payment provider.</small></p>
+        </div>
+        </div>
     </section>
-    <div class="text-center mt-3" style="max-width: 600px; margin-left: auto; margin-right: auto; opacity: 0.8;">
-        <p><small>*Please note: While we offer a full refund of our service fee, we may not be able to refund the 2.5%
-                card processing fee charged by our payment provider.</small></p>
-    </div>
-    </div>
+
+    <section class="founder-section reveal-on-scroll">
+        <div class="founder-container">
+            <h2 class="section-title">Why We Built Fond Memoirs</h2>
+            <div class="founder-content">
+                <div class="founder-text text-left">
+                    <p class="founder-quote">"My father is a gifted storyteller, but like many, he never felt compelled
+                        to write his memories down. I realized that without a way to capture these stories, they would
+                        eventually be lost. We created FondMemoirs to remove the friction of writing, leveraging AI to
+                        listen and preserve, so families can focus on what truly matters: spending time together,
+                        reliving memories and making new ones."</p>
+                    <p class="founder-signature">– Ashish, Founder</p>
+                </div>
+                <div class="founder-avatar">
+                    <img src="images/Ashish.jpg" alt="Ashish, Founder"
+                        onerror="this.parentElement.style.display='none'">
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- Section 7: FAQs -->
@@ -520,7 +534,7 @@
     <footer class="site-footer">
         <div class="footer-container">
             <div class="footer-brand">
-                <div class="logo">FondMemoirs</div>
+                <a href="index.html" class="logo">FondMemoirs</a>
                 <p class="copyright">Copyright © 2026 FondMemoirs.</p>
             </div>
             <div class="footer-links">
@@ -661,18 +675,53 @@
             try {
                 const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
                 const isUK = (tz && tz.includes('London')) || (navigator.language && navigator.language.startsWith('en-GB'));
-                
+
                 if (isUK) {
                     const priceMain = document.querySelector('.price-current');
                     const priceStrike = document.querySelector('.price-strikethrough');
                     const compPrice = document.getElementById('comparison-promo-price');
-                    
+                    const heroPromo = document.getElementById('hero-promo-price');
+                    const cardPromo = document.getElementById('card-promo-price');
+
                     if (priceMain) priceMain.textContent = '£49.00';
                     if (priceStrike) priceStrike.textContent = '£79.00';
                     if (compPrice) compPrice.innerHTML = '<strong>£49</strong> <br><small>(Promotional price, all-inclusive)</small>';
+                    if (heroPromo) heroPromo.textContent = 'Promotional Price: £49 all inclusive.';
+                    if (cardPromo) cardPromo.textContent = '£49';
                 }
             } catch (e) {
                 console.error("Pricing localization failed:", e);
+            }
+
+            // Testimonial Carousel Navigation
+            const carousel = document.getElementById('testimonial-carousel');
+            const prevBtn = document.getElementById('testimonial-prev');
+            const nextBtn = document.getElementById('testimonial-next');
+
+            if (carousel && prevBtn && nextBtn) {
+                const scrollAmount = 400; // Adjust based on card width
+
+                prevBtn.addEventListener('click', () => {
+                    carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                });
+
+                nextBtn.addEventListener('click', () => {
+                    carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                });
+
+                // Hide/show buttons based on scroll position
+                const toggleButtons = () => {
+                    prevBtn.style.opacity = carousel.scrollLeft <= 0 ? '0.3' : '1';
+                    prevBtn.style.pointerEvents = carousel.scrollLeft <= 0 ? 'none' : 'auto';
+
+                    const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+                    nextBtn.style.opacity = carousel.scrollLeft >= maxScroll - 5 ? '0.3' : '1';
+                    nextBtn.style.pointerEvents = carousel.scrollLeft >= maxScroll - 5 ? 'none' : 'auto';
+                };
+
+                carousel.addEventListener('scroll', toggleButtons);
+                window.addEventListener('resize', toggleButtons);
+                toggleButtons(); // Initial check
             }
         });
     </script>
