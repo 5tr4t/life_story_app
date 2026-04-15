@@ -2,31 +2,54 @@
 <html lang="en">
 
 <head>
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-PRFRGRSK');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-PRFRGRSK');</script>
+    <!-- End Google Tag Manager -->
+
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18070719514"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-      const headParams = new URLSearchParams(window.location.search);
-      const headSession = headParams.get('session_id');
+        const headParams = new URLSearchParams(window.location.search);
+        const headSession = headParams.get('session_id');
 
-      if (headSession) {
-          gtag('config', 'AW-18070719514', {
-              'transaction_id': headSession,
-              'value': 59.00,
-              'currency': 'USD'
-          });
-          gtag('config', 'G-P55V5Q2RKB', {
-              'transaction_id': headSession,
-              'value': 59.00,
-              'currency': 'USD'
-          });
-      } else {
-          gtag('config', 'AW-18070719514');
-          gtag('config', 'G-P55V5Q2RKB');
-      }
+        if (headSession) {
+            gtag('config', 'AW-18070719514', {
+                'transaction_id': headSession,
+                'value': 59.00,
+                'currency': 'USD'
+            });
+            gtag('config', 'G-P55V5Q2RKB', {
+                'transaction_id': headSession,
+                'value': 59.00,
+                'currency': 'USD'
+            });
+        } else {
+            gtag('config', 'AW-18070719514');
+            gtag('config', 'G-P55V5Q2RKB');
+        }
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,20 +57,22 @@
 
     <!-- Meta Pixel Code -->
     <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '780920604885483');
-    fbq('track', 'PageView');
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '780920604885483');
+        fbq('track', 'PageView');
     </script>
     <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=780920604885483&ev=PageView&noscript=1"
-    /></noscript>
+            src="https://www.facebook.com/tr?id=780920604885483&ev=PageView&noscript=1" /></noscript>
     <!-- End Meta Pixel Code -->
 
     <!-- Fonts -->
@@ -154,6 +179,12 @@
 </head>
 
 <body>
+
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PRFRGRSK" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
     <div class="success-page">
         <div class="success-card">
             <div class="success-icon">
@@ -211,7 +242,7 @@
                     'currency': 'USD',
                     'transaction_id': sessionId
                 });
-                
+
                 // Tracking for Purchase (Page load https://fondmemoirs.com/success)
                 gtag('event', 'conversion', {
                     'send_to': 'AW-18070719514/6UhbCKq83JgcEJqY5ahD',
