@@ -41,9 +41,17 @@
             // Send conversion variables to GTM
             window.dataLayer.push({
                 'event': 'purchase_success',
+                'transaction_id': headSession,
+                'value': 49.00, // Root level value
+                'currency': 'USD',
                 'eventModel': {
-                    'value': 59.00,
+                    'value': 59.00, // eventModel value
                     'transaction_id': headSession,
+                    'currency': 'USD'
+                },
+                'ecommerce': {
+                    'transaction_id': headSession,
+                    'value': 69.00, // ecommerce value
                     'currency': 'USD'
                 }
             });
