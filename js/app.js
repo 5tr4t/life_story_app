@@ -312,8 +312,13 @@ async function signupUser(name, email, password, code, memoirName, onComplete) {
 
         if (onComplete) onComplete(null);
 
-        // New users always go to setup
-        navigateTo('setup');
+        // Force user to login after registration to establish a valid session
+        state.user = null;
+        saveAppState();
+        navigateTo('login');
+        if (typeof showToast === 'function') {
+            showToast('Account created successfully! Please sign in to begin.', 'success', 5000);
+        }
 
     } catch (error) {
         console.error('Signup failed:', error);
