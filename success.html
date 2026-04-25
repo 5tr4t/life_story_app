@@ -17,7 +17,7 @@
 
 
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18070719514"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P55V5Q2RKB"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
@@ -26,12 +26,10 @@
         const headParams = new URLSearchParams(window.location.search);
         const headSession = headParams.get('session_id');
 
-        // Simple config call - parameters should not be passed here if handled by GTM or explicit events
-        gtag('config', 'AW-18070719514');
         gtag('config', 'G-P55V5Q2RKB');
 
         if (headSession) {
-            // Consolidated dataLayer push for GTM to handle
+            // Push standard variables to dataLayer for GTM to capture
             window.dataLayer.push({
                 'event': 'purchase_success',
                 'transaction_id': headSession,
