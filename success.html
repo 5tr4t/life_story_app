@@ -26,38 +26,18 @@
         const headParams = new URLSearchParams(window.location.search);
         const headSession = headParams.get('session_id');
 
-        if (headSession) {
-            gtag('config', 'AW-18070719514', {
-                'transaction_id': headSession,
-                'value': 59.00,
-                'currency': 'USD'
-            });
-            gtag('config', 'G-P55V5Q2RKB', {
-                'transaction_id': headSession,
-                'value': 59.00,
-                'currency': 'USD'
-            });
+        // Simple config call - parameters should not be passed here if handled by GTM or explicit events
+        gtag('config', 'AW-18070719514');
+        gtag('config', 'G-P55V5Q2RKB');
 
-            // Send conversion variables to GTM
+        if (headSession) {
+            // Consolidated dataLayer push for GTM to handle
             window.dataLayer.push({
                 'event': 'purchase_success',
                 'transaction_id': headSession,
-                'value': 49.00, // Root level value
-                'currency': 'USD',
-                'eventModel': {
-                    'value': 59.00, // eventModel value
-                    'transaction_id': headSession,
-                    'currency': 'USD'
-                },
-                'ecommerce': {
-                    'transaction_id': headSession,
-                    'value': 69.00, // ecommerce value
-                    'currency': 'USD'
-                }
+                'value': 59.00,
+                'currency': 'USD'
             });
-        } else {
-            gtag('config', 'AW-18070719514');
-            gtag('config', 'G-P55V5Q2RKB');
         }
     </script>
     <meta charset="UTF-8">
@@ -282,18 +262,7 @@
         const initSessionId = sessionUrlParams.get('session_id');
 
         if (initSessionId) {
-            // Report the transaction ID to Google Ads
-            if (typeof gtag === 'function') {
-                // Tracking for new action 'revenue'
-                gtag('event', 'conversion', {
-                    'send_to': 'AW-18070719514/r5QnCJaIspkcEJqY5ahD',
-                    'value': 59.00,
-                    'currency': 'USD',
-                    'transaction_id': initSessionId
-                });
-            }
-
-            // Report the transaction to Meta Pixel
+            // Report the transaction to Meta Pixel (Preserved as requested)
             if (typeof fbq === 'function') {
                 fbq('track', 'Purchase', {
                     value: 59.00,
