@@ -97,6 +97,38 @@
     <noscript>
         <link rel="stylesheet" href="css/landing.css">
     </noscript>
+    <style>
+        :root {
+            --color-bg: #FCFBF8;
+            --color-text-main: #2A2A28;
+            --font-serif: 'Playfair Display', serif;
+            --font-sans: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--color-bg);
+            color: var(--color-text-main);
+            font-family: var(--font-sans);
+            margin: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .success-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .success-card {
+            background: white;
+            padding: 4rem;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+    </style>
     <script src="https://unpkg.com/feather-icons" defer></script>
     <style>
         .success-page {
