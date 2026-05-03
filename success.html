@@ -65,12 +65,18 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap"
-        rel="stylesheet">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap">
+    </noscript>
     <!-- Landing Page CSS (reusing variables) -->
-    <link rel="stylesheet" href="css/landing.css">
-    <script src="https://unpkg.com/feather-icons"></script>
+    <link rel="preload" as="style" href="css/landing.css">
+    <link rel="stylesheet" href="css/landing.css" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="css/landing.css">
+    </noscript>
+    <script src="https://unpkg.com/feather-icons" defer></script>
     <style>
         .success-page {
             min-height: 100vh;
@@ -199,7 +205,7 @@
     </div>
 
     <script>
-        feather.replace();
+
 
         const n8nWebhookUrl = 'https://primary-production-adbb0.up.railway.app/webhook/b99f2c01-3c0c-4e28-a34a-ac46bb12516e';
 
@@ -270,6 +276,7 @@
         }
 
         fetchAccessCode();
+        feather.replace();
     </script>
 </body>
 
