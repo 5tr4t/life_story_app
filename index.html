@@ -115,7 +115,7 @@
 
         .logo {
             font-family: var(--font-serif);
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 700;
         }
 
@@ -136,6 +136,15 @@
             text-align: center;
         }
 
+        .btn-small {
+            padding: 0.6rem 1.4rem !important;
+            font-size: 0.9rem !important;
+        }
+
+        .logo-small {
+            font-size: 1.1rem !important;
+        }
+
         .btn-primary {
             background-color: var(--color-accent);
             color: white;
@@ -144,7 +153,8 @@
 
         @media (max-width: 768px) {
             .nav-links {
-                display: none;
+                position: fixed;
+                transform: translateX(100%);
             }
             .gift-ribbon { padding: 1rem 5%; }
             .gift-ribbon-text { font-size: 0.9rem; }

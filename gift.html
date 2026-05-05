@@ -183,6 +183,7 @@
             perspective: 2000px;
             position: relative;
             margin: 0 auto;
+            box-sizing: border-box;
             
             /* Initial Animation State */
             opacity: 0;
@@ -351,14 +352,13 @@
         .view-actions {
             position: absolute;
             bottom: -80px;
-            left: 50%;
-            transform: translateX(-50%);
+            left: 0;
             width: 100%;
-            max-width: 300px;
             opacity: 0;
             transition: opacity 0.5s ease;
             display: flex;
             flex-direction: column;
+            align-items: center;
             gap: 1rem;
         }
         .scene.animate-in .view-actions.show {
@@ -532,8 +532,8 @@ I can't wait to read the book of your life!</div>
 
                 <!-- Action buttons (Positioned outside the card) -->
                 <div class="view-actions" id="view-actions">
-                    <button id="open-btn" class="btn btn-primary" style="box-shadow: 0 10px 20px rgba(0,0,0,0.1);">Open Card</button>
-                    <a href="#" id="redeem-btn" class="btn btn-primary" style="box-shadow: 0 10px 20px rgba(0,0,0,0.1); display: none;">Unwrap Your Gift</a>
+                    <button id="open-btn" class="btn btn-primary" style="box-shadow: 0 10px 20px rgba(0,0,0,0.1); max-width: 300px;">Open Card</button>
+                    <a href="#" id="redeem-btn" class="btn btn-primary" style="box-shadow: 0 10px 20px rgba(0,0,0,0.1); max-width: 300px; display: none;">Unwrap Your Gift</a>
                 </div>
             </div>
         </div>
