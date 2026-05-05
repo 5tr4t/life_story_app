@@ -78,8 +78,9 @@
         /* Base Layouts */
         .gift-wrapper {
             display: flex;
-            min-height: 100vh;
+            height: 100vh;
             width: 100%;
+            overflow: hidden; /* Prevents animation from triggering browser scrollbar shifts */
         }
 
         .edit-panel {
@@ -92,6 +93,7 @@
             overflow-y: auto;
             box-shadow: 5px 0 15px rgba(0,0,0,0.03);
             z-index: 10;
+            box-sizing: border-box;
         }
 
         .preview-panel {
@@ -102,6 +104,7 @@
             background-color: var(--color-bg);
             padding: 2rem;
             position: relative;
+            box-sizing: border-box;
         }
 
         /* View Mode Layout (Centered) */
@@ -253,6 +256,7 @@
             color: #1a1a1a;
             margin-bottom: 1rem;
             line-height: 1.1;
+            padding-right: 0.2em; /* Optical centering for italic text */
         }
 
         .cover-subtitle {
@@ -369,6 +373,8 @@
         @media (max-width: 900px) {
             .gift-wrapper {
                 flex-direction: column;
+                height: auto;
+                overflow: visible;
             }
             .edit-panel {
                 width: 100%;
@@ -615,8 +621,14 @@ I can't wait to read the book of your life!</div>
 
             } else {
                 // EDIT MODE (Sender)
-                // Force card open so they can see what they are editing
+                // Force card open instantly so they can see what they are editing without waiting for the flip
+                cardWrapper.style.transition = 'none';
                 cardWrapper.classList.add('open');
+                
+                // Restore transition after a tiny delay
+                setTimeout(() => {
+                    cardWrapper.style.transition = '';
+                }, 50);
                 
                 // Initialize input listeners for live preview
                 const updatePreview = () => {
