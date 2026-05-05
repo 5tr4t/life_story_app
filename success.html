@@ -244,9 +244,9 @@
                 <div id="access-code" class="access-code-value">LOADING...</div>
             </div>
 
-            <div class="cta-group">
-                <a id="start-link" href="#" class="btn btn-primary btn-large btn-block" style="display: none;">Begin
-                    Your Memoir</a>
+            <div class="cta-group" style="display: flex; flex-direction: column; gap: 1rem; text-align: center;">
+                <a id="start-link" href="#" class="btn btn-primary btn-large btn-block" style="display: none;">Begin Your Memoir</a>
+                <a id="gift-link" href="#" class="btn" style="display: none; border: 2px solid var(--color-accent); color: var(--color-text-main); background: transparent;">Create Digital Gift Card</a>
                 <p id="code-safe-msg" class="mt-3" style="font-size: 0.9rem; opacity: 0.7; display: none;">
                     Keep this code safe. You'll need it to access your portal.
                 </p>
@@ -268,6 +268,7 @@
             const codeEl = document.getElementById('access-code');
             const labelEl = document.getElementById('code-label');
             const startLink = document.getElementById('start-link');
+            const giftLink = document.getElementById('gift-link');
             const safeMsg = document.getElementById('code-safe-msg');
 
             if (!sessionId) {
@@ -289,14 +290,25 @@
                 if (code) {
                     codeEl.textContent = code;
                     startLink.href = `app.html?code=${code}`;
-                    startLink.style.display = 'inline-block';
+                    giftLink.href = `gift.html?code=${code}`;
+                    startLink.style.display = 'block';
+                    giftLink.style.display = 'block';
                     safeMsg.style.display = 'block';
 
                     if (is_gift === true || is_gift === "true") {
                         titleEl.textContent = "A Gift of Memories.";
-                        messageEl.textContent = "You've purchased a beautiful gift. Please share the code below with your recipient so they can begin their journey.";
+                        messageEl.textContent = "You've purchased a beautiful gift. Create a personalized digital card to share with them, or give them the code directly.";
                         labelEl.textContent = "Gift Access Code";
-                        startLink.textContent = "Begin Their Memoir";
+                        startLink.textContent = "Go to Portal";
+                        
+                        // Prioritize Gift Card button for gifts
+                        startLink.style.background = 'transparent';
+                        startLink.style.color = 'var(--color-text-main)';
+                        startLink.style.border = '2px solid var(--color-accent)';
+                        
+                        giftLink.style.background = 'var(--color-accent)';
+                        giftLink.style.color = 'white';
+                        giftLink.style.border = 'none';
                     }
                 } else {
                     codeEl.textContent = "Generating...";

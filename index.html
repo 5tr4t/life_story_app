@@ -114,6 +114,33 @@
             font-size: 1.8rem;
             font-weight: 700;
         }
+
+        /* Prevent flashing blue links and unstyled buttons */
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.2rem;
+            border-radius: 50px;
+            font-family: var(--font-sans);
+            font-weight: 500;
+            font-size: 1.05rem;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: var(--color-accent);
+            color: white;
+            border: none;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+        }
     </style>
     <!-- Feather Icons for the process section -->
     <script src="https://unpkg.com/feather-icons" defer></script>
@@ -154,18 +181,18 @@
     <section class="hero-split">
         <div class="hero-text-content">
 
-            <h1 class="hero-headline reveal-delay-2">Turn Memories into a Memoir. No Writing Required.</h1>
-            <p class="hero-subheadline reveal-delay-3" style="margin-bottom: 0.5rem;">The perfect Mother's Day gift is a
+            <h1 class="hero-headline">Turn Memories into a Memoir. No Writing Required.</h1>
+            <p class="hero-subheadline" style="margin-bottom: 0.5rem;">The perfect Mother's Day gift is a
                 shared experience. Sit together, answer our AI interviewer's thoughtful questions, and let us weave her
                 stories into a beautiful printed memoir.</p>
-            <p class="hero-promo-price reveal-delay-3" id="hero-promo-price"
+            <p class="hero-promo-price" id="hero-promo-price"
                 style="color: var(--color-accent); font-weight: 600; font-size: 1.15rem; margin-bottom: 1.5rem;">
                 Promotional Price: $59 all inclusive.</p>
-            <div class="hero-actions reveal-delay-4">
+            <div class="hero-actions">
                 <a href="#checkout" class="btn btn-primary">Start the Journey Now</a>
             </div>
         </div>
-        <div class="hero-image-content reveal-delay-5">
+        <div class="hero-image-content">
             <!-- Replace the src below with the actual image of Mother & Daughter -->
             <img src="images/Website Hero.webp" alt="Mother and Daughter looking at photo album" class="image-hero">
         </div>

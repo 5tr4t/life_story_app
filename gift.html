@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Delayed Tracking Scripts -->
+    <script>
+        function loadTracking() {
+            if (window.trackingLoaded) return;
+            window.trackingLoaded = true;
+
+            // Google tag (gtag.js)
+            const gtagScript = document.createElement('script');
+            gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-P55V5Q2RKB';
+            gtagScript.async = true;
+            document.head.appendChild(gtagScript);
+
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+            gtag('config', 'G-P55V5Q2RKB');
+
+            // Meta Pixel Code
+            !function (f, b, e, v, n, t, s) {
+                if (f.fbq) return; n = f.fbq = function () {
+                    n.callMethod ?
+                        n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+                };
+                if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+                n.queue = []; t = b.createElement(e); t.async = !0;
+                t.src = v; s = b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t, s)
+            }(window, document, 'script',
+                'https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', '780920604885483');
+            fbq('track', 'PageView');
+        }
+
+        // Initialize fbq stub immediately
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];}(window,document);
+
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(loadTracking, 2000);
+        });
+        ['scroll', 'mousemove', 'touchstart'].forEach(ev => {
+            window.addEventListener(ev, loadTracking, { once: true, passive: true });
+        });
+    </script>
+    <noscript>
+        <img height="1" width="1" style="display:none"
+            src="https://www.facebook.com/tr?id=780920604885483&ev=PageView&noscript=1" />
+    </noscript>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Gift of Memories | FondMemoirs</title>
+
+    <noscript>
+        <link rel="stylesheet" href="css/landing.css">
+    </noscript>
+    
+    <style>
+        :root {
+            --color-bg: #FCFBF8;
+            --color-text-main: #2A2A28;
+            --color-accent: #C29A62;
+            --font-serif: 'Playfair Display', serif;
+            --font-sans: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--color-bg);
+            color: var(--color-text-main);
+            font-family: var(--font-sans);
+            margin: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Base Layouts */
+        .gift-wrapper {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        .edit-panel {
+            width: 400px;
+            background: #ffffff;
+            border-right: 1px solid #E6E2D8;
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.03);
+            z-index: 10;
+        }
+
+        .preview-panel {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--color-bg);
+            padding: 2rem;
+            position: relative;
+        }
+
+        /* View Mode Layout (Centered) */
+        .view-mode .edit-panel {
+            display: none;
+        }
+        .view-mode .preview-panel {
+            padding: 4rem 2rem;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--color-text-main);
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #E6E2D8;
+            border-radius: 8px;
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            box-sizing: border-box;
+            background: #FCFBF8;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-accent);
+        }
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-family: var(--font-sans);
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: none;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .btn-primary {
+            background-color: var(--color-accent);
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #A8814D;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--color-accent);
+            color: var(--color-text-main);
+            margin-top: 1rem;
+        }
+        .btn-outline:hover {
+            background: var(--color-accent);
+            color: white;
+        }
+
+        /* The Card Scene */
+        .scene {
+            width: 100%;
+            max-width: 500px;
+            aspect-ratio: 3 / 4;
+            max-height: 700px;
+            perspective: 2000px;
+            position: relative;
+            margin: 0 auto;
+            
+            /* Initial Animation State */
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .scene.animate-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card-wrapper {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            border-radius: 12px;
+        }
+
+        .card-wrapper.open {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        /* Front (Cover) */
+        .card-front {
+            background-image: url('images/gift-cover-bg.png');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            color: var(--color-text-main);
+        }
+
+        .card-front::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 255, 255, 0.3);
+            z-index: 1;
+        }
+
+        .cover-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cover-title {
+            font-family: var(--font-serif);
+            font-size: 3.5rem;
+            font-style: italic;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+
+        .cover-subtitle {
+            font-family: var(--font-sans);
+            font-size: 1.1rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #4a4a4a;
+        }
+
+        /* Back (Inside) */
+        .card-back {
+            background-image: url('images/gift-bg.png');
+            background-size: cover;
+            background-position: center;
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            padding: 3rem 2rem;
+            box-sizing: border-box;
+            text-align: center;
+            color: var(--color-text-main);
+        }
+
+        .card-back::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 255, 255, 0.4);
+            z-index: 1;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: space-between;
+        }
+
+        .card-header {
+            margin-bottom: 2rem;
+        }
+        .card-title {
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            font-style: italic;
+            color: #1a1a1a;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .card-names {
+            font-family: var(--font-sans);
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin: 2rem 0;
+            letter-spacing: 0.05em;
+        }
+
+        .card-message {
+            font-family: var(--font-serif);
+            font-size: 1.4rem;
+            line-height: 1.6;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            margin: 0 1rem;
+            white-space: pre-wrap;
+        }
+
+        .card-footer {
+            margin-top: 2rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            padding-top: 2rem;
+        }
+
+        .access-code-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .access-code {
+            font-family: var(--font-sans);
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: var(--color-accent);
+        }
+
+        .view-actions {
+            position: absolute;
+            bottom: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 300px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .scene.animate-in .view-actions.show {
+            opacity: 1;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 900px) {
+            .gift-wrapper {
+                flex-direction: column;
+            }
+            .edit-panel {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #E6E2D8;
+                padding: 2rem 1rem;
+            }
+            .preview-panel {
+                padding: 2rem 1rem;
+            }
+            .scene {
+                padding: 1rem;
+            }
+            .card-front {
+                padding: 1.5rem;
+            }
+            .cover-title { font-size: 2.5rem; }
+            .card-back { padding: 2rem 1.5rem; }
+            .card-title { font-size: 1.8rem; }
+            .card-message { font-size: 1.1rem; }
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+            }
+            .edit-panel, .view-actions, .site-header, .sticky-cta-bar {
+                display: none !important;
+            }
+            .gift-wrapper {
+                display: block;
+            }
+            .preview-panel {
+                padding: 0;
+                display: block;
+            }
+            .scene {
+                max-width: 100%;
+                height: 100vh;
+                margin: 0;
+            }
+            .card-wrapper {
+                box-shadow: none;
+                border-radius: 0;
+                transform: none !important; /* Force open for print */
+            }
+            .card-face {
+                border-radius: 0;
+            }
+            .card-front {
+                display: none; /* Don't print the cover */
+            }
+            .card-back {
+                position: relative;
+                transform: none; /* Reset transform to print properly */
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--color-text-main);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-family: var(--font-sans);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 100;
+        }
+        .toast.show {
+            opacity: 1;
+        }
+
+    </style>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" media="print" onload="this.media='all'">
+    <script src="https://unpkg.com/feather-icons" defer></script>
+</head>
+
+<body>
+    <div id="toast" class="toast">Link copied to clipboard!</div>
+
+    <div class="gift-wrapper" id="gift-wrapper">
+        
+        <!-- Editor Panel (Hidden in View Mode) -->
+        <div class="edit-panel" id="edit-panel">
+            <h2 style="font-family: var(--font-serif); margin-bottom: 0.5rem;">Personalize Gift</h2>
+            <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-bottom: 2rem;">Create a beautiful digital card to share with your recipient.</p>
+            
+            <div class="form-group">
+                <label class="form-label">To</label>
+                <input type="text" id="input-to" class="form-control" placeholder="Recipient's Name" value="Mom">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">From</label>
+                <input type="text" id="input-from" class="form-control" placeholder="Your Name" value="With Love">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Message</label>
+                <textarea id="input-message" class="form-control" placeholder="Write a personal message...">Your life story is our inspiration. Let's record them in a memoir.
+I can't wait to read the book of your life!</textarea>
+            </div>
+
+            <div style="margin-top: auto; padding-top: 2rem;">
+                <button id="btn-copy" class="btn btn-primary" style="margin-bottom: 1rem;">
+                    Copy Shareable Link
+                </button>
+                <button id="btn-print" class="btn btn-outline">
+                    Print Card
+                </button>
+            </div>
+        </div>
+
+        <!-- Preview / Display Panel -->
+        <div class="preview-panel">
+            <div class="scene" id="scene">
+                <div class="card-wrapper" id="card-wrapper">
+                    
+                    <!-- Cover (Front) -->
+                    <div class="card-face card-front">
+                        <div class="cover-content">
+                            <h1 class="cover-title">Happy Mother's Day</h1>
+                            <p class="cover-subtitle">A Gift of Memories</p>
+                        </div>
+                    </div>
+
+                    <!-- Inside (Back) -->
+                    <div class="card-face card-back">
+                        <div class="card-content">
+                            <div class="card-header">
+                                <h1 class="card-title">A Gift of Memories</h1>
+                                <div class="card-names">
+                                    <span id="display-to">For: Mom</span><br>
+                                    <span id="display-from" style="color: #666; font-size: 0.9rem;">From: With Love</span>
+                                </div>
+                            </div>
+                            
+                            <div class="card-message" id="display-message">Your life story is our inspiration. Let's record them in a memoir.
+I can't wait to read the book of your life!</div>
+                            
+                            <div class="card-footer">
+                                <div class="access-code-label">Private Access Code</div>
+                                <div class="access-code" id="display-code">LOADING</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Action buttons (Positioned outside the card) -->
+                <div class="view-actions" id="view-actions">
+                    <button id="open-btn" class="btn btn-primary" style="box-shadow: 0 10px 20px rgba(0,0,0,0.1);">Open Card</button>
+                    <a href="#" id="redeem-btn" class="btn btn-primary" style="box-shadow: 0 10px 20px rgba(0,0,0,0.1); display: none;">Unwrap Your Gift</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // DOM Elements
+            const wrapper = document.getElementById('gift-wrapper');
+            const scene = document.getElementById('scene');
+            const cardWrapper = document.getElementById('card-wrapper');
+            const viewActions = document.getElementById('view-actions');
+            const openBtn = document.getElementById('open-btn');
+            const redeemBtn = document.getElementById('redeem-btn');
+            
+            const inputTo = document.getElementById('input-to');
+            const inputFrom = document.getElementById('input-from');
+            const inputMessage = document.getElementById('input-message');
+            
+            const displayTo = document.getElementById('display-to');
+            const displayFrom = document.getElementById('display-from');
+            const displayMessage = document.getElementById('display-message');
+            const displayCode = document.getElementById('display-code');
+
+            const btnCopy = document.getElementById('btn-copy');
+            const btnPrint = document.getElementById('btn-print');
+            const toast = document.getElementById('toast');
+
+            // Parse URL Parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code') || 'YOUR-CODE';
+            const dataParam = urlParams.get('d'); // Base64 encoded payload
+
+            displayCode.textContent = code;
+
+            let isViewMode = false;
+            let toText = "Mom";
+            let fromText = "With Love";
+            let msgText = "Your life story is our inspiration. Let's record them in a memoir.\nI can't wait to read the book of your life!";
+
+            // If payload exists, decode it
+            if (dataParam) {
+                try {
+                    const decoded = JSON.parse(decodeURIComponent(atob(dataParam)));
+                    toText = decoded.t || '';
+                    fromText = decoded.f || '';
+                    msgText = decoded.m || '';
+                    isViewMode = true;
+                } catch (e) {
+                    console.error("Invalid link data");
+                }
+            }
+
+            // Determine Mode
+            if (isViewMode) {
+                // VIEW MODE (Recipient)
+                wrapper.classList.add('view-mode');
+                viewActions.classList.add('show');
+                
+                // Populate card
+                displayTo.textContent = `For: ${toText}`;
+                displayFrom.textContent = `From: ${fromText}`;
+                displayMessage.textContent = msgText;
+
+                // Set redeem link
+                redeemBtn.href = `app.html?code=${encodeURIComponent(code)}`;
+
+                // Animation & Interactions
+                setTimeout(() => {
+                    scene.classList.add('animate-in');
+                }, 300);
+
+                openBtn.addEventListener('click', () => {
+                    cardWrapper.classList.add('open');
+                    openBtn.style.display = 'none';
+                    redeemBtn.style.display = 'inline-block';
+                });
+
+            } else {
+                // EDIT MODE (Sender)
+                // Force card open so they can see what they are editing
+                cardWrapper.classList.add('open');
+                
+                // Initialize input listeners for live preview
+                const updatePreview = () => {
+                    displayTo.textContent = `For: ${inputTo.value}`;
+                    displayFrom.textContent = `From: ${inputFrom.value}`;
+                    displayMessage.textContent = inputMessage.value;
+                };
+
+                inputTo.addEventListener('input', updatePreview);
+                inputFrom.addEventListener('input', updatePreview);
+                inputMessage.addEventListener('input', updatePreview);
+                
+                // Trigger initial animation
+                setTimeout(() => {
+                    scene.classList.add('animate-in');
+                }, 100);
+
+                // Copy Link Action
+                btnCopy.addEventListener('click', () => {
+                    const payloadObj = {
+                        t: inputTo.value,
+                        f: inputFrom.value,
+                        m: inputMessage.value
+                    };
+                    const b64Data = btoa(encodeURIComponent(JSON.stringify(payloadObj)));
+                    
+                    const shareUrl = new URL(window.location.href);
+                    shareUrl.searchParams.delete('to');
+                    shareUrl.searchParams.delete('from');
+                    shareUrl.searchParams.delete('msg');
+                    shareUrl.searchParams.set('code', code);
+                    shareUrl.searchParams.set('d', b64Data);
+
+                    navigator.clipboard.writeText(shareUrl.toString()).then(() => {
+                        toast.classList.add('show');
+                        setTimeout(() => toast.classList.remove('show'), 3000);
+                    });
+                });
+
+                // Print Action
+                btnPrint.addEventListener('click', () => {
+                    window.print();
+                });
+            }
+
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+        });
+    </script>
+</body>
+</html>
