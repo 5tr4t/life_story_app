@@ -146,6 +146,34 @@
             .nav-links {
                 display: none;
             }
+            .gift-ribbon { padding: 1rem 5%; }
+            .gift-ribbon-text { font-size: 0.9rem; }
+        }
+
+        /* Gift Ribbon */
+        .gift-ribbon {
+            background-color: var(--color-text-main);
+            color: var(--color-bg);
+            padding: 0.8rem 5%;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .gift-ribbon-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            text-align: center;
+        }
+        .gift-ribbon-text {
+            font-family: var(--font-sans);
+            font-weight: 400;
+            font-size: 0.95rem;
+            letter-spacing: 0.03em;
+            line-height: 1.4;
         }
     </style>
     <!-- Feather Icons for the process section -->
@@ -203,6 +231,23 @@
             <img src="images/Website Hero.webp" alt="Mother and Daughter looking at photo album" class="image-hero">
         </div>
     </section>
+
+    <!-- Gift Card Ribbon -->
+    <div class="gift-ribbon">
+        <div class="gift-ribbon-content">
+            <!-- Inline SVG so it loads instantly without FOUC -->
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 12 20 22 4 22 4 12"></polyline>
+                <rect x="2" y="7" width="20" height="5"></rect>
+                <line x1="12" y1="22" x2="12" y2="7"></line>
+                <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
+                <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
+            </svg>
+            <span class="gift-ribbon-text">
+                <strong style="color: var(--color-accent); font-weight: 600;">Need a last-minute gift?</strong> Every purchase includes a beautifully animated digital gift card available instantly.
+            </span>
+        </div>
+    </div>
 
     <!-- Section 2: Don't Give Mom Homework -->
     <section class="homework-section text-center reveal-on-scroll">
